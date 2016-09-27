@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/config">
+        <file>configs/0attr.config</file>
+        <file>configs/0attrCorrespond.config</file>
+        <file>configs/0baseData.config</file>
+        <file>configs/0pose.config</file>
+        <file>configs/0testAttrValue.config</file>
+        <file>configs/0testDataForm.config</file>
+        <file>configs/buffy.model</file>
+    </qresource>
+</RCC>
