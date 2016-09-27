@@ -12,7 +12,8 @@ public:
     static GLOBALFUNC* inst() {
         return &represant;
     }
-    void confirmDirExist(const QString& fpath);
+    bool confirmFileExist(const QString& file);
+    bool confirmDirExist(const QString& fpath);
     static QString& pathSlashAdd(QString &fpath);
     //void getStdPercent(const char* fpath, double &stdPercent);
 

@@ -171,7 +171,7 @@ void MyImgLabel::resetData()
 bool MyImgLabel::saveToFile()
 {
     QString cmd;
-    if(access(MYXML.toStdString().c_str(), F_OK) == 0) {
+    if(GLOBALFUNC::inst()->confirmFileExist(MYXML)) {
         cmd = QString("mv %1 %2.bak").arg(MYXML).arg(MYXML);
         system(cmd.toStdString().c_str());
     }
@@ -219,7 +219,7 @@ bool MyImgLabel::saveToFile()
     return true;
 }
 
-void MyImgLabel::paintEvent(QPaintEvent */*event*/)
+void MyImgLabel::paintEvent(QPaintEvent * /*event*/)
 {
     if(showImage.isNull()) return;
     QPainter painter(this);

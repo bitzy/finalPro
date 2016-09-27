@@ -4,7 +4,13 @@
 #include <string>
 #include <iostream>
 #include <vector>
-#include <unistd.h>
+
+#ifdef WIN32
+    #include <Windows.h>
+    #include <io.h>
+#else
+    #include <unistd.h>
+#endif
 using namespace std;
 
 #include <QFile>

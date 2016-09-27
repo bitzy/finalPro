@@ -4,7 +4,7 @@
 #include <QLabel>
 #include <QPainter>
 
-#include "GLOBALHEADER.h"
+#include "GLOBALFUNC.h"
 #include "flagform.h"
 
 /**

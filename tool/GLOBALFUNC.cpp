@@ -1,11 +1,32 @@
 #include "GLOBALFUNC.h"
 
 GLOBALFUNC GLOBALFUNC::represant;
-void GLOBALFUNC::confirmDirExist(const QString &fpath) {
+
+bool GLOBALFUNC::confirmFileExist(const QString &file) {
+#ifdef WIN32
+    if(_access(file.toStdString().c_str(), 0) == -1) {
+        return false;
+    } else return true;
+#else
+    if(access(fpath.toStdString().c_str(), F_OK) == -1) {
+        return false;
+    } else return true;
+#endif
+}
+
+bool GLOBALFUNC::confirmDirExist(const QString &fpath) {
+#ifdef WIN32
+    if(_access(fpath.toStdString().c_str(), 0) == -1) {
+        QString cmd = QString("mkdir %1").arg(fpath);
+        system(cmd.toStdString().c_str());
+    }
+#else
     if(access(fpath.toStdString().c_str(), F_OK) == -1) {
         QString cmd = QString("mkdir %1").arg(fpath);
         system(cmd.toStdString().c_str());
     }
+#endif
+    return true;
 }
 
 QString &GLOBALFUNC::pathSlashAdd(QString &fpath)

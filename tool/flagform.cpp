@@ -7,7 +7,7 @@
 #include "GLOBALFUNC.h"
 #include "attrRecognize/waysInterface.h"
 
-#include <myimglabel.h>
+#include "myimglabel.h"
 
 FlagForm::FlagForm(QString dir, QString storeDir)
 {
@@ -634,7 +634,7 @@ void FlagForm::deleImg()
 
     //delete xml;
     QString deleXml = QString("%1%2.xml").arg(storePath).arg(curImgBaseName);
-    if(access(deleXml.toStdString().c_str(), F_OK) == 0) {
+    if(GLOBALFUNC::inst()->confirmFileExist(deleXml)) {
         cmd = QString("mv %1 %2").arg(deleXml).arg(GLOBALDEFINE::SYS_DELPATH);
         system(cmd.toStdString().c_str());
     }
