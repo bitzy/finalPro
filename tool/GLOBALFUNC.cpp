@@ -8,7 +8,7 @@ bool GLOBALFUNC::confirmFileExist(const QString &file) {
         return false;
     } else return true;
 #else
-    if(access(fpath.toStdString().c_str(), F_OK) == -1) {
+    if(access(file.toStdString().c_str(), F_OK) == -1) {
         return false;
     } else return true;
 #endif
