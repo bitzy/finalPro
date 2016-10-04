@@ -27,12 +27,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->setLayout(layout);
     setWindowTitle(tr("Attribute Analyze Tool"));
     QRect deskRect = QApplication::desktop()->screenGeometry();
-    resize(deskRect.width()*0.6, deskRect.height()*0.5);
+    _windowW = deskRect.width();
+    _windowH = deskRect.height();
+    resize(_windowW/2, _windowH/2);
+
     //1120,750
-    setMinimumWidth(800);
-    setMaximumWidth(1120);
-    //setMinimumHeight(680);
-    setMaximumHeight(800);
+    setMinimumWidth(800); setMinimumHeight(680);
+    setMaximumWidth(1120);setMaximumHeight(800);
 }
 
 MainWindow::~MainWindow()
@@ -132,7 +133,7 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
         table2->setCellWidget(1, i, comboBox);
     }
     table2->setMinimumHeight(100);
-    //table2->setMaximumHeight(100);
+    table2->setMaximumHeight(100);
     //! [1]
 
     //! [2]
@@ -350,9 +351,10 @@ void MainWindow::labelBegin()
         return ;
     }
     // pose data by label:
-    FlagForm* flagform = new FlagForm(path, path);//store .xml in the same dir;
-    flagform->setMinimumHeight(900);
-    flagform->setMinimumWidth(1340);
+    FlagForm* flagform = new FlagForm(path, path);//store .xml in the same dir;    
+    flagform->resize(_windowW/2, _windowH*0.8);
+    flagform->setMinimumHeight(680);
+    flagform->setMinimumWidth(1200);
     flagform->exec();
 }
 

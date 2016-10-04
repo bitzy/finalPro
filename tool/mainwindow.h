@@ -49,6 +49,8 @@ private:
     QTableWidget *table2;
     QStandardItemModel *model;
 
+    int _windowH;
+    int _windowW;
 private slots:
     void browseLabelPath();
     void browseBulkPath();

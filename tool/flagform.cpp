@@ -201,7 +201,7 @@ QTableWidget *FlagForm::UIcreateAttrTable()
     attrTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     int size = GLOBALCONFIG::inst()->getAllKind();
-    attrTable->setColumnCount(3);
+    attrTable->setColumnCount(3);    
     attrTable->setRowCount(size);
     attrTable->setVerticalHeaderLabels(GLOBALCONFIG::inst()->getAllAttrs());
 
@@ -227,6 +227,8 @@ QTableWidget *FlagForm::UIcreateAttrTable()
             attrTable->setCellWidget(i, 2, UIcreateBtn(tr("test"), SLOT(testAttr())));
         }
     }
+    attrTable->setMinimumWidth(400);
+    attrTable->setMaximumWidth(400);
 
     return attrTable;
 }
