@@ -27,8 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->centralWidget->setLayout(layout);
     setWindowTitle(tr("Attribute Analyze Tool"));
     QRect deskRect = QApplication::desktop()->screenGeometry();
-    //1120,750
     resize(deskRect.width()*0.6, deskRect.height()*0.5);
+    //1120,750
+    setMinimumWidth(800);
+    setMaximumWidth(1120);
+    //setMinimumHeight(680);
+    setMaximumHeight(800);
 }
 
 MainWindow::~MainWindow()
@@ -143,9 +147,9 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     QLabel *lineSplit1 = new QLabel;
     lineSplit1->setFrameShape(QFrame::HLine);
     LabelChoosedPath = new QLabel(GLOBALDEFINE::SYS_LABELPATH_DEFAULT);
-    LabelChoosedPath->setWordWrap(true);
+    //LabelChoosedPath->setWordWrap(true);
     BulkChoosedPath = new QLabel(GLOBALDEFINE::SYS_BULKPATH_DEFAULT);
-    BulkChoosedPath->setWordWrap(true);
+    //BulkChoosedPath->setWordWrap(true);
     analyzeChoosedFile = new QLabel;
     analyzeChoosedFile->setWordWrap(true);
 
@@ -166,6 +170,10 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     QHBoxLayout *func2Btn = new QHBoxLayout;
     func2Btn->addWidget(bulkBeginBtn);
     func2Btn->addStretch(1);
+    //new add:
+    QPushButton *bulkSleeveBeginBtn = UIcreateButton(tr("SleeveBulk"), SLOT(sleeveBulkBegin()));
+    bulkSleeveBeginBtn->setFocusPolicy(Qt::NoFocus);
+    func2Btn->addWidget(bulkSleeveBeginBtn);
 
     QHBoxLayout *func1SetPath = new QHBoxLayout;
     func1SetPath->addWidget(UIcreateLabel(tr("Label Directory:")));
@@ -176,12 +184,8 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     QHBoxLayout *func2SetPath = new QHBoxLayout;
     func2SetPath->addWidget(UIcreateLabel(tr("Bulk Directory:")));
     func2SetPath->addWidget(bulkPathBtn);
-    func2SetPath->addWidget(BulkChoosedPath);
+    func2SetPath->addWidget(BulkChoosedPath);    
     func2SetPath->addStretch(1);
-    //new add:
-    QPushButton *bulkSleeveBeginBtn = UIcreateButton(tr("SleeveBulk"), SLOT(sleeveBulkBegin()));
-    bulkSleeveBeginBtn->setFocusPolicy(Qt::NoFocus);
-    func2SetPath->addWidget(bulkSleeveBeginBtn);
 
     QHBoxLayout *func3SetPath = new QHBoxLayout;
     func3SetPath->addWidget(UIcreateLabel(tr("Analyze File:")));
