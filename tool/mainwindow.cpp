@@ -29,7 +29,7 @@ MainWindow::MainWindow(QWidget *parent) :
     QRect deskRect = QApplication::desktop()->screenGeometry();
     _windowW = deskRect.width();
     _windowH = deskRect.height();
-    resize(_windowW/2, _windowH/2);
+    resize(_windowW/2, 680);
 
     //1120,750
     setMinimumWidth(800); setMinimumHeight(680);
