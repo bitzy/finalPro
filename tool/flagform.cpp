@@ -237,7 +237,7 @@ void FlagForm::showImgByIdx(int index)
     updateCurImgIdx(index);
     QString imgPath = dealImages[index].absoluteFilePath();
     QString xmlPath = QString("%1%2.xml").arg(storePath).arg(curImgBaseName);
-    bool ret = picBoard->loadImgData(imgPath, xmlPath);
+    bool ret = picBoard->labelLoad(imgPath, xmlPath);
 
     if(ret == true) DoShowImg(picBoard);
     else DoShowImgNULL();
@@ -245,33 +245,35 @@ void FlagForm::showImgByIdx(int index)
     initialToolStatus(ret);
 }
 
-void FlagForm::DoShowImg(const MyImgLabel * data)
+void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
 {
     //posedata:
-    size_t size = data->poseDatas.size();
+    int size = (int)imgLabel->imgData.poseDatas.size();
     for(int i = 0; i < size; i++) {
-        QTableWidgetItem* tmp = new QTableWidgetItem(data->poseDatas[i]);
+        QString tmpValue = QString::fromStdString(imgLabel->imgData.poseDatas[i]);
+        QTableWidgetItem* tmp = new QTableWidgetItem(tmpValue);
         poseTable->setItem(i, 0, tmp);
     }
     //attrdata:
-    int size1 = data->attrDatas.size();
+    int size1 = imgLabel->imgData.attrDatas.size();
     for(int i = 0; i < size1; i++) {
         QComboBox *tmp = (QComboBox*)attrTable->cellWidget(i, 0);
-        int tmpIdx = tmp->findText(data->attrDatas[i]);
+        QString tmpValue = QString::fromStdString(imgLabel->imgData.attrDatas[i]);
+        int tmpIdx = tmp->findText(tmpValue);
         if(tmpIdx == -1) {
             tmp->clear();
-            tmp->addItem(data->attrDatas[i]);
+            tmp->addItem(tmpValue);
         } else {
-            tmp->setCurrentText(data->attrDatas[i]);
+            tmp->setCurrentText(tmpValue);
         }
         tmp->setDisabled(true);
     }
 }
 
-void FlagForm::reLoadImg(MyImgLabel * data)
+void FlagForm::reLoadImg(MyImgLabel * imgLabel)
 {
     //posedata:
-    data->poseDatas.clear();
+    imgLabel->imgData.poseDatas.clear();
     int size = poseTable->rowCount();
     for(int i = 0; i < size; i++) {
         QTableWidgetItem *tmp = poseTable->item(i, 0);
@@ -282,18 +284,19 @@ void FlagForm::reLoadImg(MyImgLabel * data)
         if(tmpStr.compare("null") == 0) {
             QString tmpValue("-1");
             for(int j = 1; j < tmpSize; j++) tmpValue.append(",-1");
-            data->poseDatas.push_back(tmpValue);
-        } else data->poseDatas.push_back(tmpStr);
+            imgLabel->imgData.poseDatas.push_back(tmpValue.toStdString());
+        } else imgLabel->imgData.poseDatas.push_back(tmpStr.toStdString());
     }
     //attrdata:
-    data->attrDatas.clear();
+    imgLabel->imgData.attrDatas.clear();
     int size1 = attrTable->rowCount();
     for(int i = 0; i < size1; i++) {
         QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
         QString tmpStr = tmp->currentText();
 
-        data->attrDatas.push_back(tmpStr);
+        imgLabel->imgData.attrDatas.push_back(tmpStr.toStdString());
     }
+    imgLabel->labelDataOKFlag = true;
 }
 
 void FlagForm::DoShowImgNULL()
@@ -351,19 +354,19 @@ void FlagForm::initialToolStatus(bool status)
 
         resetBtn->setDisabled(false);//can reset
         reviseBtn->setDisabled(false);//can revise
-        skipAttrBtn->setDisabled(true);//no skip attr        
+        skipAttrBtn->setDisabled(true);//no skip attr
     } else {//no data;
         isPoseLabel = true;
         resetBtn->setDisabled(true);//no reset
         reviseBtn->setDisabled(true);//no revise
         skipAttrBtn->setDisabled(false);//can skip attr
     }
-    submitBtn->setDisabled(true);// no submit    
+    submitBtn->setDisabled(true);// no submit
 }
 
 void FlagForm::updateToolBtn()
 {
-    if(isPoseLabel) {        
+    if(isPoseLabel) {
         resetBtn->setDisabled(false);
         if(poseLabelIdx == GLOBALCONFIG::inst()->getPoseCounter())
             skipAttrBtn->setDisabled(true);//no skip attr
@@ -422,7 +425,7 @@ void FlagForm::updateAttrTable(const QList<QPoint> &data)
         QString attrName = poseName.mid(3);
         int attrRow = GLOBALCONFIG::inst()->getIndexByName(attrName);
         tmpItem = (QComboBox*)attrTable->cellWidget(attrRow, 0);
-    }
+    } else return;
 
     tmpItem->clear();
     tmpItem->addItem(resValue);
@@ -623,7 +626,7 @@ void FlagForm::nextImg()
 void FlagForm::deleImg()
 {
     int retn = QMessageBox::information(this, "confirm", "Delete image?",
-                QMessageBox::Ok | QMessageBox::Cancel);
+                                        QMessageBox::Ok | QMessageBox::Cancel);
     if(retn == 0x00400000) return;
 
     QString cmd;
@@ -648,8 +651,8 @@ void FlagForm::deleImg()
 
 void FlagForm::resetImg()
 {
-    picBoard->resetData();
-    DoShowImgNULL();    
+    picBoard->labelReset();
+    DoShowImgNULL();
 
     isPoseLabel = true;
     poseLabelFull = false;
@@ -680,8 +683,8 @@ void FlagForm::skipAttrImg()
 void FlagForm::submitImg()
 {
     reLoadImg(picBoard);
-    picBoard->refreshLabelRes();
-    if(picBoard->saveToFile()) {
+    picBoard->labelRefreshPoseData();
+    if(picBoard->labelSave()) {
         initialToolStatus(true);
         isPoseLabel = false;
         int size = GLOBALCONFIG::inst()->getAllKind();
@@ -731,7 +734,7 @@ void FlagForm::estractToPath()
 
     QString numStr = extractEdit->text();
     int num = numStr.toInt();
-    for(int i = 0; i < num; i++) {        
+    for(int i = 0; i < num; i++) {
         QString imgpath = QString("%1/%2").arg(dealImages[i].absolutePath()).arg(curImgBaseName);
         QString newpath = QString("%1/%2").arg(tmpDir).arg(curImgBaseName);
         QString cmd = QString("cp %1.jpg %2.jpg").arg(imgpath).arg(newpath);

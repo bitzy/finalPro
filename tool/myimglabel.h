@@ -46,15 +46,10 @@ private:
 
     QImage image;
     QImage showImage;
-    QImage showImageCopy;
-
-    QString MYIMG;
-    QString MYXML;  
-    ImgData *imgData;//all related data;
+    QImage showImageCopy;    
 
     bool drawAllow;
     void initialDrawingStatus();
-
     FLAG_SHAPE drawShape;
     QColor drawColor;
     int curLabelIdx; //attributes index;    
@@ -65,16 +60,22 @@ private:
     friend void FlagForm::DoShowImg(const MyImgLabel*);
     friend void FlagForm::reLoadImg(MyImgLabel*);
 
+    bool labelDataOKFlag;
+    ImgData imgData;
+    bool _loadxmlData(ImgData& data);
+    bool _savexmlData(const ImgData& data);
+
 public:
     MyImgLabel();
-    bool loadImgData(const QString& img, const QString& xml);    
-    void resetData();
-    bool saveToFile();
-    void refreshLabelRes();
+    bool labelLoad(const QString& img, const QString& xml);
+    void labelReset();
+    bool labelSave();
+    void labelRefreshPoseData();
 
     void drawingSwitch(bool);
     void skipCurrentData();
     void updateLabelIdx(int idx);
+
 protected:
     void paintEvent(QPaintEvent* event);
     void mousePressEvent(QMouseEvent* event);

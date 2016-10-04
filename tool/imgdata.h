@@ -14,12 +14,14 @@ using namespace std;
 class ImgData
 {
 public:
-    string MYIMGPATH;  //IMAGE path;
+    string MYIMG;
+    string MYXML;
     vector<string> poseDatas;  //IMAGE POSE STANDARD DATA;
     vector<string> attrDatas;  //IMAGE ATTR STANDARD DATA;
-    ImgData(string imgPath, string xmlPath);
-    bool loadDataFromXML(const string &img, const string &xml);
-    bool loadImgData();
+
+public:
+    ImgData();
+    bool initial(const string img, const string xml);
 };
 
 #endif // IMGDATA_H

@@ -53,7 +53,6 @@ SOURCES       = main.cpp \
 		GLOBALDEFINE.cpp \
 		flagform.cpp \
 		myimglabel.cpp \
-		imgdetail.cpp \
 		imgdata.cpp qrc_files.cpp \
 		moc_mainwindow.cpp \
 		moc_flagform.cpp \
@@ -66,7 +65,6 @@ OBJECTS       = main.o \
 		GLOBALDEFINE.o \
 		flagform.o \
 		myimglabel.o \
-		imgdetail.o \
 		imgdata.o \
 		qrc_files.o \
 		moc_mainwindow.o \
@@ -311,7 +309,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d .tmp/tool1.0.0 || mkdir -p .tmp/tool1.0.0
-	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/tool1.0.0/ && $(COPY_FILE) --parents files.qrc .tmp/tool1.0.0/ && $(COPY_FILE) --parents mainwindow.h GLOBALDEFINE.h GLOBALFUNC.h GLOBALHEADER.h GLOBALCONFIG.h attrRecognize/waysInterface.h flagform.h myimglabel.h imgdetail.h imgdata.h .tmp/tool1.0.0/ && $(COPY_FILE) --parents main.cpp mainwindow.cpp GLOBALCONFIG.cpp GLOBALFUNC.cpp attrRecognize/waysInterface.cpp GLOBALDEFINE.cpp flagform.cpp myimglabel.cpp imgdetail.cpp imgdata.cpp .tmp/tool1.0.0/ && $(COPY_FILE) --parents mainwindow.ui .tmp/tool1.0.0/ && (cd `dirname .tmp/tool1.0.0` && $(TAR) tool1.0.0.tar tool1.0.0 && $(COMPRESS) tool1.0.0.tar) && $(MOVE) `dirname .tmp/tool1.0.0`/tool1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/tool1.0.0
+	$(COPY_FILE) --parents $(SOURCES) $(DIST) .tmp/tool1.0.0/ && $(COPY_FILE) --parents files.qrc .tmp/tool1.0.0/ && $(COPY_FILE) --parents mainwindow.h GLOBALDEFINE.h GLOBALFUNC.h GLOBALHEADER.h GLOBALCONFIG.h attrRecognize/waysInterface.h flagform.h myimglabel.h imgdata.h .tmp/tool1.0.0/ && $(COPY_FILE) --parents main.cpp mainwindow.cpp GLOBALCONFIG.cpp GLOBALFUNC.cpp attrRecognize/waysInterface.cpp GLOBALDEFINE.cpp flagform.cpp myimglabel.cpp imgdata.cpp .tmp/tool1.0.0/ && $(COPY_FILE) --parents mainwindow.ui .tmp/tool1.0.0/ && (cd `dirname .tmp/tool1.0.0` && $(TAR) tool1.0.0.tar tool1.0.0 && $(COMPRESS) tool1.0.0.tar) && $(MOVE) `dirname .tmp/tool1.0.0`/tool1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/tool1.0.0
 
 
 clean:compiler_clean 
@@ -336,13 +334,13 @@ compiler_rcc_make_all: qrc_files.cpp
 compiler_rcc_clean:
 	-$(DEL_FILE) qrc_files.cpp
 qrc_files.cpp: files.qrc \
-		configs/0baseData.config \
 		configs/0attr.config \
-		configs/buffy.model \
-		configs/0attrCorrespond.config \
-		configs/0testDataForm.config \
+		configs/0testAttrValue.config \
 		configs/0pose.config \
-		configs/0testAttrValue.config
+		configs/0attrCorrespond.config \
+		configs/buffy.model \
+		configs/0baseData.config \
+		configs/0testDataForm.config
 	/usr/lib/x86_64-linux-gnu/qt5/bin/rcc -name files files.qrc -o qrc_files.cpp
 
 compiler_moc_header_make_all: moc_mainwindow.cpp moc_flagform.cpp moc_myimglabel.cpp
@@ -687,12 +685,23 @@ moc_myimglabel.cpp: /usr/include/qt5/QtWidgets/QLabel \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
 		/usr/include/qt5/QtGui/qpen.h \
+		GLOBALFUNC.h \
 		GLOBALHEADER.h \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
 		/usr/include/qt5/QtCore/QStringList \
+		flagform.h \
+		/usr/include/qt5/QtWidgets/QDialog \
+		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtCore/QDir \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		imgdata.h \
 		myimglabel.h
 	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) $(INCPATH) -I/usr/include/c++/4.8 -I/usr/include/x86_64-linux-gnu/c++/4.8 -I/usr/include/c++/4.8/backward -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/4.8/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include myimglabel.h -o moc_myimglabel.cpp
 
@@ -948,44 +957,6 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qtabwidget.h \
 		/usr/include/qt5/QtGui/qicon.h \
 		ui_mainwindow.h \
-		/usr/include/qt5/QtCore/QVariant \
-		/usr/include/qt5/QtWidgets/QAction \
-		/usr/include/qt5/QtWidgets/qaction.h \
-		/usr/include/qt5/QtWidgets/qactiongroup.h \
-		/usr/include/qt5/QtWidgets/QApplication \
-		/usr/include/qt5/QtWidgets/qapplication.h \
-		/usr/include/qt5/QtCore/qcoreapplication.h \
-		/usr/include/qt5/QtCore/qeventloop.h \
-		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
-		/usr/include/qt5/QtGui/qguiapplication.h \
-		/usr/include/qt5/QtGui/qinputmethod.h \
-		/usr/include/qt5/QtWidgets/QButtonGroup \
-		/usr/include/qt5/QtWidgets/qbuttongroup.h \
-		/usr/include/qt5/QtWidgets/QHeaderView \
-		/usr/include/qt5/QtWidgets/qheaderview.h \
-		/usr/include/qt5/QtWidgets/qabstractitemview.h \
-		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
-		/usr/include/qt5/QtWidgets/qframe.h \
-		/usr/include/qt5/QtCore/qabstractitemmodel.h \
-		/usr/include/qt5/QtCore/qitemselectionmodel.h \
-		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
-		/usr/include/qt5/QtWidgets/qstyleoption.h \
-		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
-		/usr/include/qt5/QtGui/qvalidator.h \
-		/usr/include/qt5/QtCore/qregularexpression.h \
-		/usr/include/qt5/QtWidgets/qslider.h \
-		/usr/include/qt5/QtWidgets/qabstractslider.h \
-		/usr/include/qt5/QtWidgets/qstyle.h \
-		/usr/include/qt5/QtWidgets/qtabbar.h \
-		/usr/include/qt5/QtWidgets/qrubberband.h \
-		/usr/include/qt5/QtWidgets/QMenuBar \
-		/usr/include/qt5/QtWidgets/qmenubar.h \
-		/usr/include/qt5/QtWidgets/qmenu.h \
-		/usr/include/qt5/QtWidgets/QStatusBar \
-		/usr/include/qt5/QtWidgets/qstatusbar.h \
-		/usr/include/qt5/QtWidgets/QToolBar \
-		/usr/include/qt5/QtWidgets/qtoolbar.h \
-		/usr/include/qt5/QtWidgets/QWidget \
 		/usr/include/qt5/QtWidgets/QtWidgets \
 		/usr/include/qt5/QtWidgets/QtWidgetsDepends \
 		/usr/include/qt5/QtCore/QtCore \
@@ -1021,8 +992,10 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtCore/qtemporarydir.h \
 		/usr/include/qt5/QtCore/QScopedPointer \
 		/usr/include/qt5/QtCore/qtemporaryfile.h \
+		/usr/include/qt5/QtCore/qabstractitemmodel.h \
 		/usr/include/qt5/QtCore/qabstractproxymodel.h \
 		/usr/include/qt5/QtCore/qidentityproxymodel.h \
+		/usr/include/qt5/QtCore/qitemselectionmodel.h \
 		/usr/include/qt5/QtCore/qsortfilterproxymodel.h \
 		/usr/include/qt5/QtCore/qstringlistmodel.h \
 		/usr/include/qt5/QtCore/qjsonarray.h \
@@ -1030,8 +1003,10 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtCore/qjsondocument.h \
 		/usr/include/qt5/QtCore/qjsonobject.h \
 		/usr/include/qt5/QtCore/qabstracteventdispatcher.h \
+		/usr/include/qt5/QtCore/qeventloop.h \
 		/usr/include/qt5/QtCore/qabstractnativeeventfilter.h \
 		/usr/include/qt5/QtCore/qbasictimer.h \
+		/usr/include/qt5/QtCore/qcoreapplication.h \
 		/usr/include/qt5/QtCore/qmath.h \
 		/usr/include/qt5/QtCore/qmetaobject.h \
 		/usr/include/qt5/QtCore/qmimedata.h \
@@ -1085,6 +1060,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtCore/qlinkedlist.h \
 		/usr/include/qt5/QtCore/qmessageauthenticationcode.h \
 		/usr/include/qt5/QtCore/qqueue.h \
+		/usr/include/qt5/QtCore/qregularexpression.h \
 		/usr/include/qt5/QtCore/qscopedvaluerollback.h \
 		/usr/include/qt5/QtCore/qstack.h \
 		/usr/include/qt5/QtCore/qtextboundaryfinder.h \
@@ -1113,6 +1089,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtGui/qdrag.h \
 		/usr/include/qt5/QtGui/qgenericplugin.h \
 		/usr/include/qt5/QtGui/qgenericpluginfactory.h \
+		/usr/include/qt5/QtGui/qguiapplication.h \
+		/usr/include/qt5/QtGui/qinputmethod.h \
 		/usr/include/qt5/QtGui/qoffscreensurface.h \
 		/usr/include/qt5/QtGui/qsurface.h \
 		/usr/include/qt5/QtGui/qsurfaceformat.h \
@@ -1173,6 +1151,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtGui/qtextlist.h \
 		/usr/include/qt5/QtGui/qtexttable.h \
 		/usr/include/qt5/QtGui/qdesktopservices.h \
+		/usr/include/qt5/QtGui/qvalidator.h \
 		/usr/include/qt5/QtGui/qtguiversion.h \
 		/usr/include/qt5/QtWidgets/qaccessiblewidget.h \
 		/usr/include/qt5/QtWidgets/qcolordialog.h \
@@ -1183,6 +1162,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qfontdialog.h \
 		/usr/include/qt5/QtWidgets/qinputdialog.h \
 		/usr/include/qt5/QtWidgets/qlineedit.h \
+		/usr/include/qt5/QtWidgets/qframe.h \
 		/usr/include/qt5/QtWidgets/qmessagebox.h \
 		/usr/include/qt5/QtWidgets/qprogressdialog.h \
 		/usr/include/qt5/QtWidgets/qwizard.h \
@@ -1203,10 +1183,21 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtGui/QMatrix4x4 \
 		/usr/include/qt5/QtWidgets/qgraphicsview.h \
 		/usr/include/qt5/QtWidgets/qscrollarea.h \
+		/usr/include/qt5/QtWidgets/qabstractscrollarea.h \
+		/usr/include/qt5/QtWidgets/qabstractitemdelegate.h \
+		/usr/include/qt5/QtWidgets/qstyleoption.h \
+		/usr/include/qt5/QtWidgets/qabstractspinbox.h \
+		/usr/include/qt5/QtWidgets/qslider.h \
+		/usr/include/qt5/QtWidgets/qabstractslider.h \
+		/usr/include/qt5/QtWidgets/qstyle.h \
+		/usr/include/qt5/QtWidgets/qtabbar.h \
+		/usr/include/qt5/QtWidgets/qrubberband.h \
+		/usr/include/qt5/QtWidgets/qabstractitemview.h \
 		/usr/include/qt5/QtWidgets/qcolumnview.h \
 		/usr/include/qt5/QtWidgets/qdatawidgetmapper.h \
 		/usr/include/qt5/QtWidgets/qdirmodel.h \
 		/usr/include/qt5/QtWidgets/qfileiconprovider.h \
+		/usr/include/qt5/QtWidgets/qheaderview.h \
 		/usr/include/qt5/QtWidgets/qitemdelegate.h \
 		/usr/include/qt5/QtWidgets/qitemeditorfactory.h \
 		/usr/include/qt5/QtWidgets/qlistview.h \
@@ -1217,6 +1208,10 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qtreeview.h \
 		/usr/include/qt5/QtWidgets/qtreewidget.h \
 		/usr/include/qt5/QtWidgets/qtreewidgetitemiterator.h \
+		/usr/include/qt5/QtWidgets/qaction.h \
+		/usr/include/qt5/QtWidgets/qactiongroup.h \
+		/usr/include/qt5/QtWidgets/qapplication.h \
+		/usr/include/qt5/QtWidgets/qdesktopwidget.h \
 		/usr/include/qt5/QtWidgets/qboxlayout.h \
 		/usr/include/qt5/QtWidgets/qlayout.h \
 		/usr/include/qt5/QtWidgets/qlayoutitem.h \
@@ -1246,11 +1241,13 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/QScrollerProperties \
 		/usr/include/qt5/QtWidgets/qscrollerproperties.h \
 		/usr/include/qt5/QtCore/QMetaType \
+		/usr/include/qt5/QtCore/QVariant \
 		/usr/include/qt5/QtWidgets/qsystemtrayicon.h \
 		/usr/include/qt5/QtWidgets/qundogroup.h \
 		/usr/include/qt5/QtWidgets/qundostack.h \
 		/usr/include/qt5/QtWidgets/qundoview.h \
 		/usr/include/qt5/QtWidgets/qabstractbutton.h \
+		/usr/include/qt5/QtWidgets/qbuttongroup.h \
 		/usr/include/qt5/QtWidgets/qcalendarwidget.h \
 		/usr/include/qt5/QtWidgets/qcheckbox.h \
 		/usr/include/qt5/QtWidgets/qcombobox.h \
@@ -1268,6 +1265,8 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qlcdnumber.h \
 		/usr/include/qt5/QtWidgets/qmdiarea.h \
 		/usr/include/qt5/QtWidgets/qmdisubwindow.h \
+		/usr/include/qt5/QtWidgets/qmenu.h \
+		/usr/include/qt5/QtWidgets/qmenubar.h \
 		/usr/include/qt5/QtWidgets/qplaintextedit.h \
 		/usr/include/qt5/QtWidgets/qtextedit.h \
 		/usr/include/qt5/QtWidgets/qprogressbar.h \
@@ -1278,7 +1277,9 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		/usr/include/qt5/QtWidgets/qsplashscreen.h \
 		/usr/include/qt5/QtWidgets/qsplitter.h \
 		/usr/include/qt5/QtWidgets/qstackedwidget.h \
+		/usr/include/qt5/QtWidgets/qstatusbar.h \
 		/usr/include/qt5/QtWidgets/qtextbrowser.h \
+		/usr/include/qt5/QtWidgets/qtoolbar.h \
 		/usr/include/qt5/QtWidgets/qtoolbox.h \
 		/usr/include/qt5/QtWidgets/qtoolbutton.h \
 		/usr/include/qt5/QtWidgets/qtwidgetsversion.h \
@@ -1286,6 +1287,7 @@ mainwindow.o: mainwindow.cpp mainwindow.h \
 		GLOBALHEADER.h \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
 		GLOBALCONFIG.h \
 		GLOBALFUNC.h \
 		attrRecognize/waysInterface.h \
@@ -1357,6 +1359,8 @@ GLOBALCONFIG.o: GLOBALCONFIG.cpp GLOBALCONFIG.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/QStringList \
 		/usr/include/qt5/QtCore/qstringlist.h \
 		/usr/include/qt5/QtCore/qdatastream.h \
@@ -1428,6 +1432,8 @@ GLOBALFUNC.o: GLOBALFUNC.cpp GLOBALFUNC.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/QStringList \
 		/usr/include/qt5/QtCore/qstringlist.h \
 		/usr/include/qt5/QtCore/qdatastream.h \
@@ -1500,6 +1506,8 @@ waysInterface.o: attrRecognize/waysInterface.cpp attrRecognize/waysInterface.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/QStringList \
 		/usr/include/qt5/QtCore/qstringlist.h \
 		/usr/include/qt5/QtCore/qdatastream.h \
@@ -1571,6 +1579,8 @@ GLOBALDEFINE.o: GLOBALDEFINE.cpp GLOBALDEFINE.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/QStringList \
 		/usr/include/qt5/QtCore/qstringlist.h \
 		/usr/include/qt5/QtCore/qdatastream.h \
@@ -2023,12 +2033,14 @@ flagform.o: flagform.cpp flagform.h \
 		GLOBALHEADER.h \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
 		GLOBALCONFIG.h \
 		GLOBALFUNC.h \
 		attrRecognize/waysInterface.h \
 		myimglabel.h \
 		/usr/include/qt5/QtWidgets/QLabel \
-		/usr/include/qt5/QtGui/QPen
+		/usr/include/qt5/QtGui/QPainter \
+		imgdata.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o flagform.o flagform.cpp
 
 myimglabel.o: myimglabel.cpp myimglabel.h \
@@ -2142,23 +2154,34 @@ myimglabel.o: myimglabel.cpp myimglabel.h \
 		/usr/include/qt5/QtCore/qfiledevice.h \
 		/usr/include/qt5/QtGui/qvector2d.h \
 		/usr/include/qt5/QtGui/qtouchdevice.h \
-		/usr/include/qt5/QtGui/QPen \
+		/usr/include/qt5/QtGui/QPainter \
+		/usr/include/qt5/QtGui/qpainter.h \
+		/usr/include/qt5/QtGui/qtextoption.h \
 		/usr/include/qt5/QtGui/qpen.h \
+		GLOBALFUNC.h \
 		GLOBALHEADER.h \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
 		/usr/include/qt5/QtCore/QStringList \
+		flagform.h \
+		/usr/include/qt5/QtWidgets/QDialog \
+		/usr/include/qt5/QtWidgets/qdialog.h \
+		/usr/include/qt5/QtCore/QDir \
+		/usr/include/qt5/QtCore/qdir.h \
+		/usr/include/qt5/QtCore/qfileinfo.h \
+		imgdata.h \
 		GLOBALCONFIG.h \
 		GLOBALDEFINE.h \
 		/usr/include/qt5/QtXml/QDomDocument \
 		/usr/include/qt5/QtXml/qdom.h \
-		/usr/include/qt5/QtXml/qtxmlglobal.h
+		/usr/include/qt5/QtXml/qtxmlglobal.h \
+		/usr/include/qt5/QtGui/QMouseEvent \
+		/usr/include/qt5/QtCore/QDebug
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o myimglabel.o myimglabel.cpp
 
-imgdetail.o: imgdetail.cpp imgdetail.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o imgdetail.o imgdetail.cpp
-
 imgdata.o: imgdata.cpp imgdata.h \
+		GLOBALCONFIG.h \
 		GLOBALHEADER.h \
 		/usr/include/qt5/QtCore/QFile \
 		/usr/include/qt5/QtCore/qfile.h \
@@ -2221,13 +2244,14 @@ imgdata.o: imgdata.cpp imgdata.h \
 		/usr/include/qt5/QtCore/qisenum.h \
 		/usr/include/qt5/QtCore/qobject_impl.h \
 		/usr/include/qt5/QtCore/QString \
+		/usr/include/qt5/QtCore/QPoint \
+		/usr/include/qt5/QtCore/qpoint.h \
 		/usr/include/qt5/QtCore/QStringList \
 		/usr/include/qt5/QtCore/qstringlist.h \
 		/usr/include/qt5/QtCore/qdatastream.h \
 		/usr/include/qt5/QtCore/qpair.h \
 		/usr/include/qt5/QtCore/qregexp.h \
 		/usr/include/qt5/QtCore/qstringmatcher.h \
-		GLOBALCONFIG.h \
 		GLOBALDEFINE.h \
 		/usr/include/qt5/QtXml/QDomDocument \
 		/usr/include/qt5/QtXml/qdom.h \
