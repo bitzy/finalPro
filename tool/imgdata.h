@@ -21,7 +21,7 @@ public:
 
 public:
     ImgData();
-    bool initial(const string img, const string xml);
+    void initial(const string img, const string xml);
 };
 
 #endif // IMGDATA_H

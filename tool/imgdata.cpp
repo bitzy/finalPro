@@ -41,8 +41,8 @@ ImgData::ImgData()
     attrDatas.clear();
 }
 
-bool ImgData::initial(const string img, const string xml)
+void ImgData::initial(const string img, const string xml)
 {
     MYIMG = img;
-    MYXML = xml;
+    MYXML = xml;    
 }
