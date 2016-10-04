@@ -26,7 +26,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->centralWidget->setLayout(layout);
     setWindowTitle(tr("Attribute Analyze Tool"));
-    resize(1120, 750);
+    QRect deskRect = QApplication::desktop()->screenGeometry();
+    //1120,750
+    resize(deskRect.width()*0.6, deskRect.height()*0.5);
 }
 
 MainWindow::~MainWindow()
@@ -126,7 +128,7 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
         table2->setCellWidget(1, i, comboBox);
     }
     table2->setMinimumHeight(100);
-    table2->setMaximumHeight(100);
+    //table2->setMaximumHeight(100);
     //! [1]
 
     //! [2]
