@@ -42,6 +42,8 @@ int GLOBALTESTPOSE::getTestpreIdx(int idx) const {
     return -1;
 }
 
+//==============================================================
+
 void MyImgLabel::drawingSwitch(bool status)
 {
     drawAllow = status;
@@ -80,14 +82,16 @@ void MyImgLabel::initialDrawingStatus()
 }
 
 MyImgLabel::MyImgLabel()
-{    
+{
 }
+
 
 bool MyImgLabel::loadImgData(const QString &img, const QString &xml)
 {
     //img data:
     MYIMG = img;
     MYXML = xml;
+    imgData = new ImgData(MYIMG.toStdString(), MYXML.toStdString());
 
     image.load(img);
     showImage = image.copy();
@@ -96,51 +100,24 @@ bool MyImgLabel::loadImgData(const QString &img, const QString &xml)
     this->resize(image.width(), image.height());
     initialDrawingStatus();
 
-    //xml data:
-    QFile file(xml);
-    QDomDocument doc;
-    if(doc.setContent(&file, false) == false) return false;
-    QDomElement rootNode = doc.documentElement();
-
-    QDomNode poseDataNode = rootNode.firstChild();
-    int size = GLOBALCONFIG::inst()->getPoseCounter();
-    poseDatas.clear();
-    for(int i = 0; i < size; i++) {
-        QString poseName = GLOBALCONFIG::inst()->getPoseNameByIndex(i);
-        QString poseNameValue = poseDataNode.firstChildElement(poseName).text();
-        if(poseNameValue.isEmpty()) poseDatas.push_back("null");
-        else poseDatas.push_back(poseNameValue);
-    }
-
-    QDomNode attrDataNode = poseDataNode.nextSibling();
-    int size1 = GLOBALCONFIG::inst()->getAllKind();
-    attrDatas.clear();
-    for(int i = 0; i < size1; i++) {
-        QString attrName = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
-        QString attrNameValue = attrDataNode.firstChildElement(attrName).text();
-        if(attrNameValue.isEmpty()) attrDatas.push_back("null");
-        else attrDatas.push_back(attrNameValue);
-    }
-    file.close();
-
     refreshLabelRes();
     return true;
 }
 
-void MyImgLabel::refreshLabelRes(/*const QStringList &data*/)
+void MyImgLabel::refreshLabelRes()
 {
     painter.begin(&showImage);
     setMyPen();
 
     //get data:
     QList<QPoint> dots;
-    int size = GLOBALTESTPOSE::instance()->getTestPoseNum();
+    int size = GLOBALTESTPOSE::inst()->getTestPoseNum();
     for(int i = 0; i < size; i++) {
         QPoint tmpDot(-1, -1);
-        QString poseDotName = GLOBALTESTPOSE::instance()->getTestname(i);
+        QString poseDotName = GLOBALTESTPOSE::inst()->getTestname(i);
         int poseDotIdx = GLOBALCONFIG::inst()->getPoseIndexByName(poseDotName);
 
-        QString dataStr = poseDatas[poseDotIdx];
+        QString dataStr = imgData->poseDatas[poseDotIdx];
         if(dataStr.compare("null") != 0) {
             QStringList dataValues = dataStr.split(",");
             tmpDot.setX(dataValues[0].toInt());
@@ -152,7 +129,7 @@ void MyImgLabel::refreshLabelRes(/*const QStringList &data*/)
     //draw data:
     for(int i = 0; i < size; i++) {
         if(dots[i].x() == -1) continue;
-        int dotPreIdx = GLOBALTESTPOSE::instance()->getTestpreIdx(i);
+        int dotPreIdx = GLOBALTESTPOSE::inst()->getTestpreIdx(i);
         if(dotPreIdx == -1) painter.drawPoint(dots[i].x(), dots[i].y());
         else painter.drawLine(dots[i], dots[dotPreIdx]);
     }
@@ -194,23 +171,27 @@ bool MyImgLabel::saveToFile()
     root.appendChild(node2);
 
     //pose data:
-    int size = poseDatas.size();
+    size_t size = imgData->poseDatas.size();
     for(int i = 0; i < size; i++) {
         QString tmpName = GLOBALCONFIG::inst()->getPoseNameByIndex(i);
         QDomElement tmpNode1 = doc.createElement(tmpName);
         int tmpType = GLOBALCONFIG::inst()->getPTypeIdxByIdx(i);
         tmpNode1.setAttribute("type", GLOBALDEFINE::BASEDATA_NAMES[tmpType]);
-        QDomText nodeText = doc.createTextNode(poseDatas[i]);
+
+        QString tmpValue = imgData->poseDatas[i];
+        QDomText nodeText = doc.createTextNode(tmpValue);
         tmpNode1.appendChild(nodeText);
         node1.appendChild(tmpNode1);
     }
 
     //attr data:
-    int size1 = attrDatas.size();
+    size_t size1 = imgData->attrDatas.size();
     for(int i = 0; i < size1; i++) {
         QString tmpName = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
         QDomElement tmpNode2 = doc.createElement(tmpName);
-        QDomText nodeText = doc.createTextNode(attrDatas[i]);
+
+        QString tmpValue = imgData->attrDatas[i];
+        QDomText nodeText = doc.createTextNode(tmpValue);
         tmpNode2.appendChild(nodeText);
         node2.appendChild(tmpNode2);
     }

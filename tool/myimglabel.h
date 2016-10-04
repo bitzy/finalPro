@@ -6,6 +6,7 @@
 
 #include "GLOBALFUNC.h"
 #include "flagform.h"
+#include "imgdata.h"
 
 /**
  * @brief The GLOBALTESTPOSE class
@@ -22,7 +23,7 @@ class GLOBALTESTPOSE {
     GLOBALTESTPOSE(){}
     GLOBALTESTPOSE(const GLOBALTESTPOSE&);
 public:
-    static GLOBALTESTPOSE* instance() {
+    static GLOBALTESTPOSE* inst() {
         return &represant;
     }
     int getTestPoseNum() const;
@@ -30,6 +31,10 @@ public:
     int getTestpreIdx(int idx) const;
 };
 
+/**
+ * @brief The MyImgLabel class
+ * This class used for update flagform data.
+ */
 class MyImgLabel : public QLabel
 {    
     Q_OBJECT
@@ -44,9 +49,8 @@ private:
     QImage showImageCopy;
 
     QString MYIMG;
-    QString MYXML;
-    QStringList poseDatas;
-    QStringList attrDatas;
+    QString MYXML;  
+    ImgData *imgData;//all related data;
 
     bool drawAllow;
     void initialDrawingStatus();
@@ -71,7 +75,6 @@ public:
     void drawingSwitch(bool);
     void skipCurrentData();
     void updateLabelIdx(int idx);
-
 protected:
     void paintEvent(QPaintEvent* event);
     void mousePressEvent(QMouseEvent* event);

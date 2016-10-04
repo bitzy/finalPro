@@ -22,7 +22,6 @@ SOURCES += main.cpp\
     GLOBALDEFINE.cpp \
     flagform.cpp \
     myimglabel.cpp \
-    imgdetail.cpp \
     imgdata.cpp
 
 HEADERS  += mainwindow.h \
@@ -33,7 +32,6 @@ HEADERS  += mainwindow.h \
     attrRecognize/waysInterface.h \
     flagform.h \
     myimglabel.h \
-    imgdetail.h \
     imgdata.h
 
 FORMS    += mainwindow.ui
