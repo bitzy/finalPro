@@ -19,8 +19,8 @@ FlagForm::FlagForm(QString dir, QString storeDir)
     } else {
         storePath = GLOBALFUNC::pathSlashAdd(storeDir);
 
-        UIcreateAll();
-        showImgByIdx(0);
+        UIcreateAll();  //create all window;
+        showImgByIdx(0); //show content;
     }
 }
 
@@ -248,7 +248,7 @@ void FlagForm::showImgByIdx(int index)
 void FlagForm::DoShowImg(const MyImgLabel * data)
 {
     //posedata:
-    int size = data->poseDatas.size();
+    size_t size = data->poseDatas.size();
     for(int i = 0; i < size; i++) {
         QTableWidgetItem* tmp = new QTableWidgetItem(data->poseDatas[i]);
         poseTable->setItem(i, 0, tmp);
@@ -760,7 +760,7 @@ void FlagForm::findImageName()
 }
 
 //=======================key set=========================================
-void FlagForm::closeEvent(QCloseEvent */*e*/) {    
+void FlagForm::closeEvent(QCloseEvent * /*e*/) {
     if(isPoseLabel == true) {
         int ret = QMessageBox::information(
                     this, "Confirm",
