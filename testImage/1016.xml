@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<file name="/home/sharon/Documents/code/qt_project/finalpro/testImage/1016.jpg">
+    <pose>
+        <head type="Point">277,62</head>
+        <neck type="Point">275,146</neck>
+        <left_shoulder type="Point">212,190</left_shoulder>
+        <left_elbow type="Point">197,324</left_elbow>
+        <left_hand type="Point">222,416</left_hand>
+        <right_shoulder type="Point">364,185</right_shoulder>
+        <right_elbow type="Point">367,307</right_elbow>
+        <right_hand type="Point">379,416</right_hand>
+        <left_hip type="Point">263,404</left_hip>
+        <left_knee type="Point">249,579</left_knee>
+        <left_ankle type="Point">239,776</left_ankle>
+        <right_hip type="Point">343,404</right_hip>
+        <right_knee type="Point">370,573</right_knee>
+        <right_ankle type="Point">389,781</right_ankle>
+        <L_Sleeve type="Line">187,275,209,275</L_Sleeve>
+        <R_Sleeve type="Line">360,280,376,280</R_Sleeve>
+        <Lenth type="Line">243,358,372,356</Lenth>
+        <HSIColor1 type="Rectangle">224,264,257,295</HSIColor1>
+        <HSIColor2 type="Rectangle">-1,-1,-1,-1</HSIColor2>
+        <HSIColor3 type="Rectangle">-1,-1,-1,-1</HSIColor3>
+    </pose>
+    <attr>
+        <collar>F-collar</collar>
+        <sleeve>s_short</sleeve>
+        <up_length>normal</up_length>
+        <texture>Single</texture>
+        <sleeveValue>38.9</sleeveValue>
+        <lenthValue>33.3</lenthValue>
+        <Color1>0</Color1>
+        <Color2></Color2>
+        <Color3></Color3>
+    </attr>
+</file>
