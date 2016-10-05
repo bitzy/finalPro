@@ -119,15 +119,18 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     vheader << "CheckOption" << "Method";
     table2->setVerticalHeaderLabels(vheader);
     for(int i = 0; i < size; i++) {
-        QString attrNameTmp = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
+        string attrNameTmp = GLOBALCONFIG::inst()->getAttrNameByIndex(i).toStdString();
         //checkbox
         QCheckBox *check = new QCheckBox;
         check->setCheckState(Qt::Checked);
         table2->setCellWidget(0, i, check);
 
         //functionlist:
-        QComboBox *comboBox = new QComboBox;
-        QStringList tmplist = ATTRWAYS::instance()->getWays(attrNameTmp);
+        QComboBox *comboBox = new QComboBox;        
+        vector<string> stdlist = ATTRWAYS::instance()->getWays(attrNameTmp);
+        QStringList tmplist;
+        for(int ii = 0; ii < stdlist.size(); ii++)
+            tmplist << QString::fromStdString(stdlist[ii]);
         comboBox->addItems(tmplist);
         if(tmplist.size() == 0) check->setEnabled(false);
         table2->setCellWidget(1, i, comboBox);

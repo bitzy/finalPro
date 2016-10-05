@@ -22,7 +22,10 @@ SOURCES += main.cpp\
     GLOBALDEFINE.cpp \
     flagform.cpp \
     myimglabel.cpp \
-    imgdata.cpp
+    imgdata.cpp \
+    attrRecognize/sleeveways.cpp \
+    attrRecognize/data.cpp \
+    attrRecognize/stdconfig.cpp
 
 HEADERS  += mainwindow.h \
     GLOBALDEFINE.h \
@@ -32,9 +35,24 @@ HEADERS  += mainwindow.h \
     attrRecognize/waysInterface.h \
     flagform.h \
     myimglabel.h \
-    imgdata.h
+    imgdata.h \
+    attrRecognize/data.h \
+    attrRecognize/stdconfig.h
 
 FORMS    += mainwindow.ui
 
 RESOURCES += \
     files.qrc
+
+INCLUDEPATH += /usr/local/opencv3/include \
+        /usr/local/opencv3/include/opencv \
+        /usr/local/opencv3/include/opencv2
+
+LIBS += -L /usr/local/opencv3/lib/ \
+         /usr/local/opencv3/lib/libopencv_highgui.so \
+        /usr/local/opencv3/lib/libopencv_core.so \
+        /usr/local/opencv3/lib/libopencv_imgproc.so \
+        /usr/local/opencv3/lib/libopencv_imgcodecs.so \
+        /usr/local/opencv3/lib/libopencv_ml.so \
+        /usr/local/opencv3/lib/libopencv_objdetect.so \
+        /usr/local/opencv3/lib/libopencv_ximgproc.so

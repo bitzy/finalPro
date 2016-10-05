@@ -220,7 +220,7 @@ QTableWidget *FlagForm::UIcreateAttrTable()
 
         //way & test:
         QComboBox *wayComboBox = new QComboBox;
-        QStringList tmplist = ATTRWAYS::instance()->getWays(attrName);
+        QStringList tmplist;// = ATTRWAYS::instance()->getWays(attrName);
         if(!tmplist.isEmpty()) {
             wayComboBox->addItems(tmplist);
             attrTable->setCellWidget(i, 1, wayComboBox);

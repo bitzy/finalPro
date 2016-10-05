@@ -140,7 +140,7 @@ bool MyImgLabel::_savexmlData(const ImgData &data)
     root.appendChild(node2);
 
     //pose data:
-    size_t size = imgData.poseDatas.size();
+    int size = (int)imgData.poseDatas.size();
     for(int i = 0; i < size; i++) {
         QString tmpName = GLOBALCONFIG::inst()->getPoseNameByIndex(i);
         QDomElement tmpNode1 = doc.createElement(tmpName);
@@ -154,7 +154,7 @@ bool MyImgLabel::_savexmlData(const ImgData &data)
     }
 
     //attr data:
-    size_t size1 = imgData.attrDatas.size();
+    int size1 = (int)imgData.attrDatas.size();
     for(int i = 0; i < size1; i++) {
         QString tmpName = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
         QDomElement tmpNode2 = doc.createElement(tmpName);

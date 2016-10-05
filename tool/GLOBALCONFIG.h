@@ -2,24 +2,16 @@
 #define GLOBALCONFIG_H
 
 #include "GLOBALHEADER.h"
+#include "attrRecognize/stdconfig.h"
 
+/**
+ * @brief The GLOBALCONFIG class
+ * DEFINE all attribute and pose data type.
+ */
 class GLOBALCONFIG {
     static GLOBALCONFIG represant;
-
-    //attrconfig:
-    static int maxAlternative;
-    static QList<QString> attrName;
-    static QList<QString> labelAttrName;
-    static QList<QStringList> attrValues;
-
-    //poseconfig:
-    static QList<QString> poseName;
-    static QList<int> poseTypeIndex;
-
     GLOBALCONFIG(){}
     GLOBALCONFIG(const GLOBALCONFIG&);
-    static bool _init;
-    static bool init();
 public:
     //get instance:
     static GLOBALCONFIG* inst() {
