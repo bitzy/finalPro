@@ -2,7 +2,10 @@
 #define GLOBALFUNC_H
 
 #include "GLOBALHEADER.h"
-
+/**
+ * @brief The GLOBALFUNC class
+ *  forms used function.
+ */
 class GLOBALFUNC {    
     static GLOBALFUNC represant;
     GLOBALFUNC(){}
