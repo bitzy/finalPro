@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<file name="/home/sharon/Documents/code/qt_project/finalpro/testImage/1015.jpg">
+<file name="C:/Users/sharon/code/finalPro/finalPro/testImage/1015.jpg">
     <pose>
         <head type="Point">234,66</head>
         <neck type="Point">273,149</neck>
@@ -11,7 +11,7 @@
         <right_hand type="Point">422,444</right_hand>
         <left_hip type="Point">277,443</left_hip>
         <left_knee type="Point">287,614</left_knee>
-        <left_ankle type="Point">290,800</left_ankle>
+        <left_ankle type="Point">284,770</left_ankle>
         <right_hip type="Point">371,435</right_hip>
         <right_knee type="Point">367,614</right_knee>
         <right_ankle type="Point">330,793</right_ankle>
@@ -30,7 +30,7 @@
         <sleeveValue>83.2</sleeveValue>
         <lenthValue>47.8</lenthValue>
         <Color1>0</Color1>
-        <Color2></Color2>
-        <Color3></Color3>
+        <Color2>null</Color2>
+        <Color3>null</Color3>
     </attr>
 </file>
