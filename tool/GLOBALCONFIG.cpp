@@ -32,12 +32,13 @@ QStringList GLOBALCONFIG::getAllAttrs() const
 
 int GLOBALCONFIG::attrKind() const
 {
-    return STDCONFIG::INST()->attrName.size();
+    return (int)STDCONFIG::INST()->attrName.size();
 }
 
 int GLOBALCONFIG::getAllKind() const
 {
-    return attrKind() + STDCONFIG::INST()->labelAttrName.size();
+    return (int)STDCONFIG::INST()->labelAttrName.size()
+            + attrKind();
 }
 
 int GLOBALCONFIG::getIndexByName(QString name) const

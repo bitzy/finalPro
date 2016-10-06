@@ -15,7 +15,7 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
+    mainwindow.cpp \
     GLOBALCONFIG.cpp \
     GLOBALFUNC.cpp \
     attrRecognize/waysInterface.cpp \
@@ -44,11 +44,23 @@ FORMS    += mainwindow.ui
 RESOURCES += \
     files.qrc
 
-INCLUDEPATH += /usr/local/opencv3/include \
+win32:{
+    INCLUDEPATH += C:\Users\sharon\Downloads\opencv\build\include \
+        C:\Users\sharon\Downloads\opencv\build\include\opencv \
+        C:\Users\sharon\Downloads\opencv\build\include\opencv2
+    Debug: LIBS += -LC:\Users\sharon\Downloads\opencv\build\x64\vc12\lib \
+        -lopencv_ts300d \
+        -lopencv_world300d
+    Release: LIBS += -L C:\Users\sharon\Downloads\opencv\build\x64\vc12\lib \
+        -lopencv_ts300 \
+        -lopencv_world300
+}
+
+UNIX:{
+    INCLUDEPATH += /usr/local/opencv3/include \
         /usr/local/opencv3/include/opencv \
         /usr/local/opencv3/include/opencv2
-
-LIBS += -L /usr/local/opencv3/lib/ \
+    LIBS += -L /usr/local/opencv3/lib/ \
          /usr/local/opencv3/lib/libopencv_highgui.so \
         /usr/local/opencv3/lib/libopencv_core.so \
         /usr/local/opencv3/lib/libopencv_imgproc.so \
@@ -56,3 +68,4 @@ LIBS += -L /usr/local/opencv3/lib/ \
         /usr/local/opencv3/lib/libopencv_ml.so \
         /usr/local/opencv3/lib/libopencv_objdetect.so \
         /usr/local/opencv3/lib/libopencv_ximgproc.so
+}

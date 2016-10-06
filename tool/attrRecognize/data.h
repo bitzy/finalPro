@@ -10,7 +10,7 @@ using namespace std;
 class Data
 {
     string imgpath;
-    Mat img;
+    cv::Mat img;
 
 public:
     Data();
