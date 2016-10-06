@@ -1,0 +1,6 @@
+delImg/*
+tool/*.o
+tool/*.pro
+tool/*.user
+debug/*
+*~
