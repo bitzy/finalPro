@@ -44,7 +44,7 @@ FORMS    += mainwindow.ui
 RESOURCES += \
     files.qrc
 
-win32:{
+win32{
     INCLUDEPATH += C:\Users\sharon\Downloads\opencv\build\include \
         C:\Users\sharon\Downloads\opencv\build\include\opencv \
         C:\Users\sharon\Downloads\opencv\build\include\opencv2
@@ -56,7 +56,7 @@ win32:{
         -lopencv_world300
 }
 
-UNIX:{
+unix{
     INCLUDEPATH += /usr/local/opencv3/include \
         /usr/local/opencv3/include/opencv \
         /usr/local/opencv3/include/opencv2

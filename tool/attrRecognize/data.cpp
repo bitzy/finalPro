@@ -22,7 +22,7 @@ void Data::initial(
         const vector<string> &p,
         const vector<string> &a)
 {
-    img = imread(pimg);  //cv_8uc3
+    img = imread(pimg.c_str());  //cv_8uc3
 
     //load poseData
 }
