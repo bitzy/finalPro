@@ -89,6 +89,8 @@ private slots:
     void estractToPath();
     void findImageName();
 
+    void testAttr();
+
 protected:
     void closeEvent(QCloseEvent *);
     void keyPressEvent(QKeyEvent*);

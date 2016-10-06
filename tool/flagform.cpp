@@ -220,9 +220,10 @@ QTableWidget *FlagForm::UIcreateAttrTable()
 
         //way & test:
         QComboBox *wayComboBox = new QComboBox;
-        QStringList tmplist;// = ATTRWAYS::instance()->getWays(attrName);
-        if(!tmplist.isEmpty()) {
-            wayComboBox->addItems(tmplist);
+        vector<string> tmplist = ATTRWAYS::instance()->getWays(attrName.toStdString());
+        int size1 = tmplist.size();
+        for(int j = 0; j < size1; j++) {
+            wayComboBox->addItem(QString::fromStdString(tmplist[j]));
             attrTable->setCellWidget(i, 1, wayComboBox);
             attrTable->setCellWidget(i, 2, UIcreateBtn(tr("test"), SLOT(testAttr())));
         }
@@ -269,6 +270,10 @@ void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
             tmp->setCurrentText(tmpValue);
         }
         tmp->setDisabled(true);
+        tmp = (QComboBox*)attrTable->cellWidget(i, 1);
+        if(tmp) tmp->setEnabled(true);
+        tmp = (QComboBox*)attrTable->cellWidget(i, 2);
+        if(tmp) tmp->setEnabled(true);
     }
 }
 
@@ -299,7 +304,8 @@ void FlagForm::reLoadImg(MyImgLabel * imgLabel)
 
         tmpData.push_back(tmpStr.toStdString());
     }
-    imgLabel->imgData.setAttrDatas(tmpData);
+    imgLabel->imgData.setAttrDatas(tmpData);    
+    imgLabel->imgData.setXmlDataLoadFlag(true);
     imgLabel->labelDataOKFlag = true;
 }
 
@@ -314,6 +320,10 @@ void FlagForm::DoShowImgNULL()
             tmp->addItem("");
         }
         tmp->setEnabled(true);
+        tmp = (QComboBox*)attrTable->cellWidget(i, 1);
+        if(tmp) tmp->setEnabled(false);
+        tmp = (QComboBox*)attrTable->cellWidget(i, 2);
+        if(tmp) tmp->setEnabled(false);
     }
 }
 
@@ -764,6 +774,18 @@ void FlagForm::findImageName()
             break;
         }
     }
+}
+
+void FlagForm::testAttr()
+{
+    QPushButton* btn = (QPushButton*)sender();
+    int attrIndex = btn->frameGeometry().y() / 30;
+
+    QComboBox *tmpItem = (QComboBox*)attrTable->cellWidget(attrIndex, 1);
+    int funcIndex = tmpItem->currentIndex();
+    if(funcIndex == -1) return;
+
+    showResult->setText(picBoard->labelTest(attrIndex, funcIndex));
 }
 
 //=======================key set=========================================

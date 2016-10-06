@@ -129,7 +129,8 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
         QComboBox *comboBox = new QComboBox;        
         vector<string> stdlist = ATTRWAYS::instance()->getWays(attrNameTmp);
         QStringList tmplist;
-        for(int ii = 0; ii < stdlist.size(); ii++)
+        int size1 = (int)stdlist.size();
+        for(int ii = 0; ii < size1; ii++)
             tmplist << QString::fromStdString(stdlist[ii]);
         comboBox->addItems(tmplist);
         if(tmplist.size() == 0) check->setEnabled(false);

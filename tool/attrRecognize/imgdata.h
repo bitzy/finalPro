@@ -28,14 +28,15 @@ private:
     vector<string> poseDatas;   //image standard pose data;
     vector<string> attrDatas;   //image standard attr data;
 
-    //recognize process related data;
-    vector<Point2i> ManDotstd;
-    vector<int> AttrVstd;
+    //recognize process related data;    
+    vector<int> attrVstd;
 
     Mat src;
-    int POSETYPE;
+    Point2i head, neck, lshoud, rshoud, lelbow, relbow, lhand;
+    Point2i rhand, lhip, rhip, lknee, rknee, lank, rank;
+    enum POSETYPE { TOP=1, HALF, ALL};
+    POSETYPE HSTYLE;
 
-    void _getManDotstd();
 public:
     ImgData();
     bool preprocessed() const;
@@ -51,7 +52,12 @@ public:
     //You must set img's path & corresponding xml's path;
     void loadImg(const string img, const string xml);
     void preprocess();
-    //recognize function list;
+private:
+    void _loadManDotstd();
+    void __resizePoint(Point& p, int xoffset, int yoffset, double scale);
+    void _resizePosePoints(int xoffset, int yoffset, double scale);
+    Rect __getBoundingBox();
+    void _resizeSrcToFixedHeight(const Rect& rect, int height = 800);
 };
 
 #endif // IMGDATA_H

@@ -5,7 +5,10 @@
 
 #include <QDomDocument>
 #include <QMouseEvent>
+#include <QTime>
 #include <QDebug>
+
+#include "attrRecognize/waysInterface.h"
 
 GLOBALTESTPOSE GLOBALTESTPOSE::represant;
 QStringList GLOBALTESTPOSE::testname;
@@ -60,7 +63,7 @@ void MyImgLabel::skipCurrentData()
     for(int i = 0; i < dataNum; i++) {
         labelData.push_back(tmp);
     }
-    emit dataGetOk(labelData);    
+    emit dataGetOk(labelData);
 }
 
 void MyImgLabel::updateLabelIdx(int idx)
@@ -250,6 +253,19 @@ void MyImgLabel::labelRefreshPoseData()
     update();
 }
 
+const QString MyImgLabel::labelTest(int attri, int wayj)
+{
+    QString res;
+
+    QTime testTime;
+    testTime.start();
+    bool ret = ATTRWAYS::instance()->recognize(imgData, attri, wayj);
+
+    if(ret) res = QString("Succeed. \nCost Time: %1 s.").arg(testTime.elapsed()/1000.0);
+    else res = QString("Error!");
+    return res;
+}
+
 void MyImgLabel::labelReset()
 {
     showImage = image.copy();
@@ -322,6 +338,6 @@ void MyImgLabel::mouseReleaseEvent(QMouseEvent *event)
         painter.end();
         update();
 
-        emit dataGetOk(labelData);        
+        emit dataGetOk(labelData);
     }
 }

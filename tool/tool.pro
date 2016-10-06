@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     myimglabel.cpp \
     attrRecognize/sleeveways.cpp \
     attrRecognize/stdconfig.cpp \
-    attrRecognize/imgdata.cpp
+    attrRecognize/imgdata.cpp \
+    attrRecognize/mytool.cpp
 
 HEADERS  += mainwindow.h \
     GLOBALDEFINE.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     flagform.h \
     myimglabel.h \
     attrRecognize/stdconfig.h \
-    attrRecognize/imgdata.h
+    attrRecognize/imgdata.h \
+    attrRecognize/mytool.h
 
 FORMS    += mainwindow.ui
 

@@ -62,26 +62,19 @@ vector<string> ATTRWAYS::getWays(string name) const
  * @param wayj
  * @return
  */
-bool ATTRWAYS::recognize(int attri, int wayj)
-{
+bool ATTRWAYS::recognize(ImgData &img, int attri, int wayj)
+{    
     if(_between(attri, 0, attrWays.size()) &&
             _between(wayj, 0, attrWays[attri].size())) {
         attrIdx = attri;
         waysIdx = wayj;
+        if(img.getxmlDataLoadFlag() == false) img.preprocess();
         ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
         result = (this->*func)();
         return true;
     }
+    /*cout << "attri:"  << attri << ";" << "wayj:" << wayj << endl;*/
     return false;
 
 }
 
-void ATTRWAYS::preprocess(ImgData &img)
-{
-    img.ManDotstd.clear();
-    int size = (int)img.poseDatas.size();
-    img.ManDotstd.resize(size);
-    for(int i = 0; i < size; i++) {
-    }
-    img.AttrVstd.clear();
-}

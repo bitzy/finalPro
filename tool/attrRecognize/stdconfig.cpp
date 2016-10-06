@@ -55,3 +55,75 @@ bool STDCONFIG::init() {
     return true;
 }
 
+/*
+const vector<string>& STDCONFIG::getAttrs() const {
+    return attrName;
+}
+
+const vector<string> STDCONFIG::getAllAttrs() const
+{
+    vector<string> res;
+    res.insert(attrName.begin(), attrName.end());
+    res.insert(labelAttrName.begin(), labelAttrName.end());
+    return res;
+}
+*/
+int STDCONFIG::attrKind() const
+{
+    return attrName.size();
+}
+
+int STDCONFIG::getAllKind() const
+{
+    return attrName.size() + labelAttrName.size();
+}
+
+/*
+int STDCONFIG::getIndexByName(const string name) const
+{
+    int size = attrKind();
+    for(int i = 0; i < size; i++) {
+        if(!name.compare(attrName[i])) return i;
+    }
+    int size1 = (int)labelAttrName.size();
+    for(int i = 0; i < size1; i++) {
+        if(!name.compare(labelAttrName[i]))
+            return i+size;
+    }
+    return -1;
+}
+
+string STDCONFIG::getAttrNameByIndex(int index) const
+{
+    if(index < attrKind()) return attrName[index];
+    else return labelAttrName[index-attrKind()];
+}*/
+
+int STDCONFIG::getPoseCounter() const
+{
+    return poseName.size();
+}
+
+int STDCONFIG::getPoseIndexByName(const string name) const
+{
+    int size = getPoseCounter();
+    for(int i = 0; i < size; i++) {
+        if(!name.compare(poseName[i])) return i;
+    }
+    return -1;
+}
+
+/*
+string STDCONFIG::getPoseNameByIndex(int index) const
+{
+    if(index >= getPoseCounter()) exit(14);
+    return poseName[index];
+}*/
+
+int STDCONFIG::getPTypeIdxByIdx(int index) const
+{
+    if(index >= getPoseCounter()) return 0;
+    return poseTypeIndex[index];
+}
+
+

@@ -71,10 +71,11 @@ public:
     void labelReset();
     bool labelSave();
     void labelRefreshPoseData();
+    const QString labelTest(int attri, int wayj);
 
     void drawingSwitch(bool);
     void skipCurrentData();
-    void updateLabelIdx(int idx);
+    void updateLabelIdx(int idx);    
 
 protected:
     void paintEvent(QPaintEvent* event);
