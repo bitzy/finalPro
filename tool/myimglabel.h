@@ -6,7 +6,7 @@
 
 #include "GLOBALFUNC.h"
 #include "flagform.h"
-#include "imgdata.h"
+#include "attrRecognize/imgdata.h"
 
 /**
  * @brief The GLOBALTESTPOSE class

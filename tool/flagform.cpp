@@ -250,17 +250,17 @@ void FlagForm::showImgByIdx(int index)
 void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
 {
     //posedata:
-    int size = (int)imgLabel->imgData.poseDatas.size();
+    int size = imgLabel->imgData.getPoseDatas().size();
     for(int i = 0; i < size; i++) {
-        QString tmpValue = QString::fromStdString(imgLabel->imgData.poseDatas[i]);
+        QString tmpValue = QString::fromStdString(imgLabel->imgData.getPoseDatas()[i]);
         QTableWidgetItem* tmp = new QTableWidgetItem(tmpValue);
         poseTable->setItem(i, 0, tmp);
     }
-    //attrdata:
-    int size1 = imgLabel->imgData.attrDatas.size();
+    //attrdata:    
+    int size1 = imgLabel->imgData.getAttrDatas().size();
     for(int i = 0; i < size1; i++) {
         QComboBox *tmp = (QComboBox*)attrTable->cellWidget(i, 0);
-        QString tmpValue = QString::fromStdString(imgLabel->imgData.attrDatas[i]);
+        QString tmpValue = QString::fromStdString(imgLabel->imgData.getAttrDatas()[i]);
         int tmpIdx = tmp->findText(tmpValue);
         if(tmpIdx == -1) {
             tmp->clear();
@@ -275,7 +275,7 @@ void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
 void FlagForm::reLoadImg(MyImgLabel * imgLabel)
 {
     //posedata:
-    imgLabel->imgData.poseDatas.clear();
+    vector<string> tmpData;
     int size = poseTable->rowCount();
     for(int i = 0; i < size; i++) {
         QTableWidgetItem *tmp = poseTable->item(i, 0);
@@ -286,18 +286,20 @@ void FlagForm::reLoadImg(MyImgLabel * imgLabel)
         if(tmpStr.compare("null") == 0) {
             QString tmpValue("-1");
             for(int j = 1; j < tmpSize; j++) tmpValue.append(",-1");
-            imgLabel->imgData.poseDatas.push_back(tmpValue.toStdString());
-        } else imgLabel->imgData.poseDatas.push_back(tmpStr.toStdString());
+            tmpData.push_back(tmpValue.toStdString());
+        } else tmpData.push_back(tmpStr.toStdString());
     }
+    imgLabel->imgData.setPoseDatas(tmpData);
     //attrdata:
-    imgLabel->imgData.attrDatas.clear();
+    tmpData.clear();
     int size1 = attrTable->rowCount();
     for(int i = 0; i < size1; i++) {
         QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
         QString tmpStr = tmp->currentText();
 
-        imgLabel->imgData.attrDatas.push_back(tmpStr.toStdString());
+        tmpData.push_back(tmpStr.toStdString());
     }
+    imgLabel->imgData.setAttrDatas(tmpData);
     imgLabel->labelDataOKFlag = true;
 }
 

@@ -56,12 +56,14 @@ vector<string> ATTRWAYS::getWays(string name) const
     return res;
 }
 
-bool ATTRWAYS::recognize(const ImgData &img, int attri, int wayj)
-{    
-    if(!img.initFlag) return false;
-    if(!myimgData.compareSame(img.MYIMG)) {
-        preprocess(img);
-    }
+/**
+ * @brief ATTRWAYS::recognize
+ * @param attri
+ * @param wayj
+ * @return
+ */
+bool ATTRWAYS::recognize(int attri, int wayj)
+{
     if(_between(attri, 0, attrWays.size()) &&
             _between(wayj, 0, attrWays[attri].size())) {
         attrIdx = attri;
@@ -74,7 +76,12 @@ bool ATTRWAYS::recognize(const ImgData &img, int attri, int wayj)
 
 }
 
-void ATTRWAYS::preprocess(const ImgData &img)
+void ATTRWAYS::preprocess(ImgData &img)
 {
-    myimgData.initial(img.MYIMG, img.poseDatas, img.attrDatas);
+    img.ManDotstd.clear();
+    int size = (int)img.poseDatas.size();
+    img.ManDotstd.resize(size);
+    for(int i = 0; i < size; i++) {
+    }
+    img.AttrVstd.clear();
 }

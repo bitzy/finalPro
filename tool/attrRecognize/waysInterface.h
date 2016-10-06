@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "../imgdata.h"
-#include "data.h"
+#include "imgdata.h"
+#include "stdconfig.h"
 using namespace std;
 
 class ATTRWAYS;
@@ -35,22 +35,19 @@ class ATTRWAYS {
 
     int attrIdx;    //recognize the attrIdx attribute;
     int waysIdx;    //recognize by the way of waysIdx;
-    int result;     //recognize result
-    Data myimgData;
-
+    int result;     //recognize result    
 public:
     static ATTRWAYS* instance() {
         return &represant;
     }
-    //recognize img's attribute i by way j;
-    bool recognize(const ImgData& img, int attri, int wayj);
-
-    //preprocess img;
-    void preprocess(const ImgData& img);
-
+    //======================== outer ======================
     vector<string> getWays(string name) const;
-    //ATTR_FUNC getAttrFuncAddress(string attrName, int j) const;
+    //recognize img's attribute i by way j;
+    bool recognize(int attri, int wayj);
 
+    //======================== inner ======================
+    //preprocess img;
+    void preprocess(ImgData& img);
     //attribute's recognize ways;
     int sleeveBaseWay();
 };
