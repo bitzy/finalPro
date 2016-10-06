@@ -4,4 +4,5 @@ tool/*~
 tool/tool.pro.user
 tool/attrRecognize/*~
 tool/configs/*~
+build-tool-Desktop_Qt_5_3_MSVC2013_OpenGL_64bit-Debug/*
 *~
