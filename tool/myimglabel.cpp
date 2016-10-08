@@ -71,6 +71,17 @@ void MyImgLabel::updateLabelIdx(int idx)
     curLabelIdx = idx;
 }
 
+QString MyImgLabel::getColor(const QPoint &pos) const
+{
+    QString res;
+    int r, g, b;
+    imgData.getPointColor(pos.x(), pos.y(), r, g, b);
+    res.append(_int2color(r));
+    res.append(_int2color(g));
+    res.append(_int2color(b));
+    return res;
+}
+
 void MyImgLabel::setMyPen(int width, QColor color)
 {
     pen.setWidth(width);
@@ -119,7 +130,9 @@ bool MyImgLabel::_loadxmlData(ImgData &data)
         QString attrName = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
         QString attrNameValue = attrDataNode.firstChildElement(attrName).text();
         if(attrNameValue.isEmpty()) tmpData.push_back("null");
-        else tmpData.push_back(attrNameValue.toStdString());
+        else {
+            tmpData.push_back(attrNameValue.toStdString());
+        }
     }
     data.setAttrDatas(tmpData);
     file.close();
@@ -187,6 +200,14 @@ bool MyImgLabel::_savexmlData(const ImgData &data)
     doc.save(out, 4, QDomNode::EncodingFromTextStream);
     file.close();
     return true;
+}
+
+QString MyImgLabel::_int2color(int v) const
+{
+    QString res;
+    if(v <= 15) res = "0";
+    res.append(QString::number(v, 16).toUpper());
+    return res;
 }
 
 MyImgLabel::MyImgLabel()

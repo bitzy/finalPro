@@ -22,9 +22,10 @@ public:
 
 private:
     void UIcreateAll();
-    QPushButton* UIcreateBtn(const QString&, const char*);
+    QPushButton* UIcreateBtn(const QString&, const char*);    
     QTableWidget* UIcreatePoseTable();
     QTableWidget* UIcreateAttrTable();
+    void UIsetColor(int id, const QString& color);
 
     MyImgLabel* picBoard;
     QPushButton* prevBtn;
@@ -70,8 +71,7 @@ private:
     double calSleeveLenth(const QList<QPoint>& data, bool left);
     int sleeveDouble2Int(double percent);
     double calClothLenth(const QList<QPoint>& data);
-    int clothDouble2Int(double percent);
-    int calBGRColor(const QList<QPoint>& data);
+    int clothDouble2Int(double percent);    
 
     QPoint _getDataFromBoard(int row);
 

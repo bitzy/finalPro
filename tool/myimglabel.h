@@ -57,13 +57,15 @@ private:
     QPoint curSPoint;
     QList<QPoint> labelData;
 
-    friend void FlagForm::DoShowImg(const MyImgLabel*);
-    friend void FlagForm::reLoadImg(MyImgLabel*);
+    //friend void FlagForm::DoShowImg(const MyImgLabel*);
+    //friend void FlagForm::reLoadImg(MyImgLabel*);
+    friend class FlagForm;
 
     bool labelDataOKFlag;
     ImgData imgData;
     bool _loadxmlData(ImgData& data);
     bool _savexmlData(const ImgData& data);
+    QString _int2color(int v) const;
 
 public:
     MyImgLabel();
@@ -76,6 +78,7 @@ public:
     void drawingSwitch(bool);
     void skipCurrentData();
     void updateLabelIdx(int idx);    
+    QString getColor(const QPoint& pos) const;
 
 protected:
     void paintEvent(QPaintEvent* event);

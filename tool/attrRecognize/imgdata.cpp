@@ -17,7 +17,8 @@
 #define PRA "right_ankle"
 //=================== POSE NAME =============
 
-ImgData::ImgData() {}
+ImgData::ImgData() {
+}
 
 bool ImgData::preprocessed() const
 {
@@ -68,6 +69,8 @@ void ImgData::loadImg(const string img, const string xml)
 {
     MYIMG = img;
     MYXML = xml;
+    src_ori = imread(MYIMG);
+
     preprocessFlag = false;
     xmlDataLoadFlag = false;
 }
@@ -78,12 +81,20 @@ void ImgData::preprocess()
     if(!getxmlDataLoadFlag()) {
         cout << "ERROR:img xml Data not loaded!" << endl;
         exit(12);
-    }
-    src = imread(MYIMG);
+    }    
     _loadManDotstd();
     _resizeSrcToFixedHeight(__getBoundingBox());
     preprocessFlag = true;
 }
+
+void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) const
+{
+    Vec3b color = _getPixelColor(Point(x1, y1));
+    r = color[2];
+    g = color[1];
+    b = color[0];
+}
+
 
 void ImgData::_loadManDotstd()
 {
@@ -111,28 +122,28 @@ void ImgData::_loadManDotstd()
     rank = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PRA)];
 }
 
-void ImgData::__resizePoint(Point &p, int xoffset, int yoffset, double scale)
+void ImgData::__resizePoint(Point &p) const
 {
     p.x = (p.x-xoffset)*scale;
     p.y = (p.y-yoffset)*scale;
 }
 
-void ImgData::_resizePosePoints(int xoffset, int yoffset, double scale)
+void ImgData::_resizePosePoints()
 {
-    __resizePoint(head, xoffset, yoffset, scale);
-    __resizePoint(neck, xoffset, yoffset, scale);
-    __resizePoint(lshoud, xoffset, yoffset, scale);
-    __resizePoint(rshoud, xoffset, yoffset, scale);
-    __resizePoint(lelbow, xoffset, yoffset, scale);
-    __resizePoint(relbow, xoffset, yoffset, scale);
-    __resizePoint(lhand, xoffset, yoffset, scale);
-    __resizePoint(rhand, xoffset, yoffset, scale);
-    __resizePoint(lhip, xoffset, yoffset, scale);
-    __resizePoint(rhip, xoffset, yoffset, scale);
-    __resizePoint(lknee, xoffset, yoffset, scale);
-    __resizePoint(rknee, xoffset, yoffset, scale);
-    __resizePoint(lank, xoffset, yoffset, scale);
-    __resizePoint(rank, xoffset, yoffset, scale);
+    __resizePoint(head);
+    __resizePoint(neck);
+    __resizePoint(lshoud);
+    __resizePoint(rshoud);
+    __resizePoint(lelbow);
+    __resizePoint(relbow);
+    __resizePoint(lhand);
+    __resizePoint(rhand);
+    __resizePoint(lhip);
+    __resizePoint(rhip);
+    __resizePoint(lknee);
+    __resizePoint(rknee);
+    __resizePoint(lank);
+    __resizePoint(rank);
 }
 
 Rect ImgData::__getBoundingBox()
@@ -169,8 +180,8 @@ Rect ImgData::__getBoundingBox()
 
     int marginVertical = (bottom - top) / 5;
     int marginHorinzol = (right - left) / 5;
-    int imgwidth = src.cols - 1;
-    int imgheight = src.rows - 1;
+    int imgwidth = src_ori.cols - 1;
+    int imgheight = src_ori.rows - 1;
 
     int outTop = top - marginVertical;
     outTop = (outTop < 0? 0:outTop);
@@ -187,11 +198,18 @@ Rect ImgData::__getBoundingBox()
 
 void ImgData::_resizeSrcToFixedHeight(const Rect &rect, int height)
 {
-    int xoffset = rect.x, yoffset = rect.y;
-    Mat focusImgROI = src(rect);
-    double scale = 1.0*height/focusImgROI.rows;
-    resize(src, src, Size(), scale, scale);
+    xoffset = rect.x;
+    yoffset = rect.y;
+    Mat focusImgROI = src_ori(rect);
+    scale = 1.0*height/focusImgROI.rows;
+    resize(src_ori, src, Size(), scale, scale);
 
     //resize Point
-    _resizePosePoints(xoffset, yoffset, scale);
+    _resizePosePoints();
+}
+
+Vec3b ImgData::_getPixelColor(const Point &p) const
+{
+    Vec3b color = src_ori.at<Vec3b>(p.y, p.x);
+    return color;
 }

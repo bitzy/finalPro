@@ -41,7 +41,6 @@ void FlagForm::UIcreateAll()
 
     submitBtn = UIcreateBtn(tr("&Submit to DB"), SLOT(submitImg()));
     submitBtn->setShortcut(Qt::Key_S);
-    submitBtn->setDisabled(true);
 
     resetBtn = UIcreateBtn(tr("&Reset"), SLOT(resetImg()));
     resetBtn->setShortcut(Qt::Key_R);
@@ -130,15 +129,31 @@ void FlagForm::UIcreateAll()
     rightSleeveValue = new QLabel("-1");
 
     color1Label = new QLabel("null");
+    color1Label->setMaximumWidth(30);
+    color1Label->setMinimumWidth(30);
+    color1Label->setMaximumHeight(30);
+    color1Label->setMinimumHeight(30);
     color2Label = new QLabel("null");
+    color2Label->setMaximumWidth(30);
+    color2Label->setMinimumWidth(30);
+    color2Label->setMaximumHeight(30);
+    color2Label->setMinimumHeight(30);
     color3Label = new QLabel("null");
+    color3Label->setMaximumWidth(30);
+    color3Label->setMinimumWidth(30);
+    color3Label->setMaximumHeight(30);
+    color3Label->setMinimumHeight(30);
+    QHBoxLayout *tmpHbox = new QHBoxLayout;
+    tmpHbox->addWidget(color1Label);
+    tmpHbox->addWidget(color2Label);
+    tmpHbox->addWidget(color3Label);
+    tmpHbox->addStretch(1);
+
     QVBoxLayout *vbox = new QVBoxLayout;
     vbox->addWidget(UIcreateAttrTable(), 1);
     vbox->addWidget(leftSleeveValue);
     vbox->addWidget(rightSleeveValue);
-    vbox->addWidget(color1Label);
-    vbox->addWidget(color2Label);
-    vbox->addWidget(color3Label);
+    vbox->addLayout(tmpHbox);
     vbox->addWidget(showResult, 1);
 
     //! [21]
@@ -201,7 +216,7 @@ QTableWidget *FlagForm::UIcreateAttrTable()
     attrTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     int size = GLOBALCONFIG::inst()->getAllKind();
-    attrTable->setColumnCount(3);    
+    attrTable->setColumnCount(3);
     attrTable->setRowCount(size);
     attrTable->setVerticalHeaderLabels(GLOBALCONFIG::inst()->getAllAttrs());
 
@@ -234,6 +249,31 @@ QTableWidget *FlagForm::UIcreateAttrTable()
     return attrTable;
 }
 
+void FlagForm::UIsetColor(int id, const QString &color)
+{
+    QString colorStr, text;
+    if(color.isNull() || !color.compare("null")) {
+        colorStr = QString("background-color:;");
+        text = QString("-");
+    } else if(color.size() == 6){
+        colorStr = QString("background-color:#%1;").arg(color);
+    } else {//illegal
+        colorStr = QString("background-color:;");
+        text = QString("null");
+    }
+
+    if(id == 1) {
+        color1Label->setStyleSheet(colorStr);
+        color1Label->setText(text);
+    } else if(id == 2) {
+        color2Label->setStyleSheet(colorStr);
+        color2Label->setText(text);
+    } else if(id == 3) {
+        color3Label->setStyleSheet(colorStr);
+        color3Label->setText(text);
+    }
+}
+
 //=======================show image=========================================
 void FlagForm::showImgByIdx(int index)
 {
@@ -257,7 +297,7 @@ void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
         QTableWidgetItem* tmp = new QTableWidgetItem(tmpValue);
         poseTable->setItem(i, 0, tmp);
     }
-    //attrdata:    
+    //attrdata:
     int size1 = imgLabel->imgData.getAttrDatas().size();
     for(int i = 0; i < size1; i++) {
         QComboBox *tmp = (QComboBox*)attrTable->cellWidget(i, 0);
@@ -275,6 +315,11 @@ void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
         tmp = (QComboBox*)attrTable->cellWidget(i, 2);
         if(tmp) tmp->setEnabled(true);
     }
+    //label:
+    int x = GLOBALCONFIG::inst()->getIndexByName("Color1");
+    UIsetColor(1, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x]));
+    UIsetColor(2, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x+1]));
+    UIsetColor(3, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x+2]));
 }
 
 void FlagForm::reLoadImg(MyImgLabel * imgLabel)
@@ -304,7 +349,7 @@ void FlagForm::reLoadImg(MyImgLabel * imgLabel)
 
         tmpData.push_back(tmpStr.toStdString());
     }
-    imgLabel->imgData.setAttrDatas(tmpData);    
+    imgLabel->imgData.setAttrDatas(tmpData);
     imgLabel->imgData.setXmlDataLoadFlag(true);
     imgLabel->labelDataOKFlag = true;
 }
@@ -343,9 +388,9 @@ void FlagForm::updateCurImgIdx(int idx)
     curNameShowLabel->setText(curImgBaseName);
     leftSleeveValue->setText(tr("-1"));
     rightSleeveValue->setText(tr("-1"));
-    color1Label->setText(tr(""));
-    color2Label->setText(tr(""));
-    color3Label->setText(tr(""));
+    color1Label->setText(tr("null"));
+    color2Label->setText(tr("null"));
+    color3Label->setText(tr("null"));
 }
 
 void FlagForm::updatePosLabelIdx(int idx)
@@ -356,6 +401,10 @@ void FlagForm::updatePosLabelIdx(int idx)
     if(poseLabelIdx == GLOBALCONFIG::inst()->getPoseCounter()) {
         poseLabelFull = true;
         updateToolBtn();
+
+        //stop flag immediately.
+        isPoseLabel = false;
+        picBoard->drawingSwitch(isPoseLabel);
     }
 }
 
@@ -375,7 +424,7 @@ void FlagForm::initialToolStatus(bool status)
         reviseBtn->setDisabled(true);//no revise
         skipAttrBtn->setDisabled(false);//can skip attr
     }
-    submitBtn->setDisabled(true);// no submit
+    //submitBtn->setDisabled(true);// no submit
 }
 
 void FlagForm::updateToolBtn()
@@ -398,12 +447,12 @@ void FlagForm::updateToolBtn()
 
 void FlagForm::updateAttrTable(const QList<QPoint> &data)
 {
-    if(data[0].x() == -1) return ;
     QString poseName = GLOBALCONFIG::inst()->getPoseNameByIndex(poseLabelIdx);
 
     QComboBox *tmpItem;
     QString resValue;
     if(!poseName.compare("L_Sleeve") || !poseName.compare("R_Sleeve")) {
+        if(data[0].x() == -1) return ;
         bool leftFlag = !poseName.compare("L_Sleeve");
         double percent = calSleeveLenth(data, leftFlag);
         resValue = QString::number(percent, 'f', 1);
@@ -419,6 +468,7 @@ void FlagForm::updateAttrTable(const QList<QPoint> &data)
         if(leftFlag) leftSleeveValue->setText(resValue);
         else rightSleeveValue->setText(resValue);
     } else if(!poseName.compare("Lenth")) {
+        if(data[0].x() == -1) return ;
         double percent = calClothLenth(data);
         resValue = QString::number(percent, 'f', 1);
 
@@ -432,13 +482,15 @@ void FlagForm::updateAttrTable(const QList<QPoint> &data)
         tmpItem = (QComboBox*)attrTable->cellWidget(attrRow, 0);
     } else if(!poseName.compare("HSIColor1") || !poseName.compare("HSIColor2") ||
               !poseName.compare("HSIColor3")) {
-        int BGR = calBGRColor(data);
-        resValue = QString::number(BGR);
 
-        //set value:
         QString attrName = poseName.mid(3);
         int attrRow = GLOBALCONFIG::inst()->getIndexByName(attrName);
         tmpItem = (QComboBox*)attrTable->cellWidget(attrRow, 0);
+
+        int id = poseName.mid(8).toInt();
+        if(data[0].x() == -1) resValue = QString("null");
+        else resValue = picBoard->getColor(data[0]);
+        UIsetColor(id, resValue);
     } else return;
 
     tmpItem->clear();
@@ -595,11 +647,6 @@ int FlagForm::clothDouble2Int(double percent)
     else return 3;
 }
 
-int FlagForm::calBGRColor(const QList<QPoint> &data)
-{
-    return 0;
-}
-
 QPoint FlagForm::_getDataFromBoard(int row)
 {
     QString str = poseTable->item(row, 0)->text();
@@ -624,14 +671,14 @@ void FlagForm::prevImg()
 }
 
 void FlagForm::nextImg()
-{
+{    
     if(poseLabelIdx != 0 && isPoseLabel == true) {
         int ret = QMessageBox::information(
                     this, "Confirm",
                     "Change not saved, confirm to the next one?",
                     QMessageBox::Ok | QMessageBox::Cancel);
         if(ret == 0x00400000) return;
-    }
+    }    
     showImgByIdx(curImgIndex + 1);
 }
 
@@ -704,7 +751,7 @@ void FlagForm::submitImg()
         int size = GLOBALCONFIG::inst()->getAllKind();
         for(int i = 0; i < size; i++) {
             QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
-            tmp->setEnabled(true);
+            tmp->setEnabled(false);
         }
     } else {
         QMessageBox::information(this, "error", "save error!", QMessageBox::Ok);
@@ -802,7 +849,6 @@ void FlagForm::closeEvent(QCloseEvent * /*e*/) {
 void FlagForm::keyPressEvent(QKeyEvent *e) {
     if((e->key() == Qt::Key_Control)) {
         picBoard->drawingSwitch(isPoseLabel);
-    } else if(e->key() == Qt::Key_X) {
     }
 }
 

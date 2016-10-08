@@ -31,11 +31,17 @@ private:
     //recognize process related data;    
     vector<int> attrVstd;
 
+    Mat src_ori;
     Mat src;
     Point2i head, neck, lshoud, rshoud, lelbow, relbow, lhand;
     Point2i rhand, lhip, rhip, lknee, rknee, lank, rank;
     enum POSETYPE { TOP=1, HALF, ALL};
     POSETYPE HSTYLE;
+
+    //scale data;
+    int xoffset;
+    int yoffset;
+    double scale;
 
 public:
     ImgData();
@@ -52,12 +58,14 @@ public:
     //You must set img's path & corresponding xml's path;
     void loadImg(const string img, const string xml);
     void preprocess();
+    void getPointColor(const int x1, const int y1, int&r, int&g, int&b) const;
 private:
     void _loadManDotstd();
-    void __resizePoint(Point& p, int xoffset, int yoffset, double scale);
-    void _resizePosePoints(int xoffset, int yoffset, double scale);
+    void __resizePoint(Point& p) const;
+    void _resizePosePoints();
     Rect __getBoundingBox();
     void _resizeSrcToFixedHeight(const Rect& rect, int height = 800);
+    Vec3b _getPixelColor(const Point& p) const;
 };
 
 #endif // IMGDATA_H

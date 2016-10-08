@@ -23,8 +23,7 @@ bool STDCONFIG::init() {
     const int LLIMIT = 255;
     char line[LLIMIT], tmpName[LLIMIT], tmpValues[LLIMIT];
     maxAlternative = -1;
-    while(!infile.eof()) {
-        infile.getline(line, LLIMIT);
+    while(infile.getline(line, LLIMIT)) {
         int ret = sscanf(line, "%[^:]%*c%[^\n]", tmpName, tmpValues);
         if(ret == 2) {//has value
             vector<string> values;
@@ -45,8 +44,7 @@ bool STDCONFIG::init() {
     infile.open(sys_poseConfigFile);
     if(!infile) exit(10);
     int tmpType;
-    while(!infile.eof()) {
-        infile.getline(line, LLIMIT);
+    while(infile.getline(line, LLIMIT)) {
         sscanf(line, "%[^:]%*c%d", tmpName, &tmpType);
         poseName.push_back(tmpName);
         poseTypeIndex.push_back(tmpType);
