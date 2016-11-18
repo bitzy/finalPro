@@ -10,7 +10,11 @@ ATTRWAYS ATTRWAYS::represant;
 bool ATTRWAYS::init() {
     //funcAttrType initial:
     ifstream attrconfig("./configs/0attr.config");
-    if(!attrconfig) exit(11);
+    if(!attrconfig) {
+        cout << "Cann't find file: ./configs/0attr.config"  << endl;
+        cout << "exit with ERROR code 11." << endl;
+        exit(11);
+    }
 
     const int LINE_LIMIT = 255;
     char line[LINE_LIMIT], tmpname[LINE_LIMIT], tmpStr[LINE_LIMIT];
@@ -25,9 +29,17 @@ bool ATTRWAYS::init() {
     //attrWays initial:
     attrWays.resize(funcAttrType.size());
     vector<FUNCITEM> sleeveWays;
+
+    //sleeve:
     FUNCITEM s1("baseWay", &ATTRWAYS::sleeveBaseWay);
     sleeveWays.push_back(s1);
     attrWays[1] = sleeveWays;
+
+    //texture:
+    vector<FUNCITEM> textureWays;
+    FUNCITEM s2("TextureReg", &ATTRWAYS::textureWay1);
+    textureWays.push_back(s2);
+    attrWays[3] = textureWays;
 
     return true;
 }

@@ -41,8 +41,7 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RESOURCES += \
-    files.qrc
+RESOURCES +=
 
 win32{
     INCLUDEPATH += C:\Users\sharon\Downloads\opencv\build\include \

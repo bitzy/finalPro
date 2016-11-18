@@ -2,6 +2,7 @@
 #include <fstream>
 #include <cstring>
 #include <cstdio>
+#include <cstdlib>
 
 STDCONFIG STDCONFIG::represant;
 
@@ -18,7 +19,11 @@ bool STDCONFIG::_init = init();
 
 bool STDCONFIG::init() {
     ifstream infile(sys_attrConfigFile);
-    if(!infile) exit(10);
+    if(!infile) {
+        cout << "Cann't find file:" << sys_attrConfigFile << endl;
+        cout << "exit with ERROR code 10." << endl;
+        exit(10);
+    }
 
     const int LLIMIT = 255;
     char line[LLIMIT], tmpName[LLIMIT], tmpValues[LLIMIT];
@@ -42,7 +47,11 @@ bool STDCONFIG::init() {
 
     //pose config load:
     infile.open(sys_poseConfigFile);
-    if(!infile) exit(10);
+    if(!infile) {
+        cout << "Cann't find file:" << sys_poseConfigFile << endl;
+        cout << "exit with ERROR code 10." << endl;
+        exit(10);
+    }
     int tmpType;
     while(infile.getline(line, LLIMIT)) {
         sscanf(line, "%[^:]%*c%d", tmpName, &tmpType);

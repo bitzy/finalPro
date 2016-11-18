@@ -1,5 +1,9 @@
 #include "imgdata.h"
 #include "mytool.h"
+#include <opencv2/opencv.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+using namespace cv;
 //=================== POSE NAME =============
 #define PH  "head"
 #define PN  "neck"
@@ -65,11 +69,12 @@ void ImgData::setAttrDatas(const vector<string> &data)
     attrDatas = data;
 }
 
+
 void ImgData::loadImg(const string img, const string xml)
 {
     MYIMG = img;
     MYXML = xml;
-    src_ori = imread(MYIMG);
+    src_ori = cv::imread(MYIMG);
 
     preprocessFlag = false;
     xmlDataLoadFlag = false;
@@ -78,8 +83,9 @@ void ImgData::loadImg(const string img, const string xml)
 //do the process step for all images.
 void ImgData::preprocess()
 {
-    if(!getxmlDataLoadFlag()) {
-        cout << "ERROR:img xml Data not loaded!" << endl;
+    if(!getxmlDataLoadFlag()) {        
+        cout << "Data Struct not load xml data yet!" << endl;
+        cout << "exit with ERROR code 12." << endl;
         exit(12);
     }    
     _loadManDotstd();
@@ -155,23 +161,23 @@ Rect ImgData::__getBoundingBox()
             left = fminvalue6(left, lknee.x, rknee.x);
             if(lank.x != -1) {
                 left = fminvalue6(left, lank.x, rank.x);
-                HSTYLE = POSETYPE::ALL;
-            } else HSTYLE = POSETYPE::HALF;
+                HSTYLE = ImgData::ALL;
+            } else HSTYLE = ImgData::HALF;
         } else {
-            HSTYLE = POSETYPE::TOP;
+            HSTYLE = ImgData::TOP;
         }
     }
     int right = fmaxvalue6(rshoud.x, relbow.x, lelbow.x, lhand.x, rhip.x);
     {
-        if(HSTYLE == POSETYPE::HALF) {
+        if(HSTYLE == ImgData::HALF) {
             right = fmaxvalue6(right, lknee.x, rknee.x);
-        } else if(HSTYLE == POSETYPE::ALL) {
+        } else if(HSTYLE == ImgData::ALL) {
             right = fmaxvalue6(right, lknee.x, rknee.x, lank.x, rank.x);
         }
     }
     int bottom = fmaxvalue6(lelbow.y, lhand.y, relbow.y, rhand.y, lhip.y, rhip.y);
     {
-        if(HSTYLE == POSETYPE::HALF) {
+        if(HSTYLE == ImgData::HALF) {
             bottom = fmaxvalue6(bottom, lknee.y, rknee.y);
         } else {
             bottom = fmaxvalue6(bottom, lknee.y, rknee.y, lank.y, rank.y);
@@ -196,8 +202,9 @@ Rect ImgData::__getBoundingBox()
     return res;
 }
 
+
 void ImgData::_resizeSrcToFixedHeight(const Rect &rect, int height)
-{
+{    
     xoffset = rect.x;
     yoffset = rect.y;
     Mat focusImgROI = src_ori(rect);

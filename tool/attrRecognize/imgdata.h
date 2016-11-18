@@ -1,12 +1,14 @@
 #ifndef IMGDATA_H
 #define IMGDATA_H
 
-#include "attrRecognize/stdconfig.h"
+#include "stdconfig.h"
 #include <iostream>
 #include <string>
 #include <vector>
+#include <cstdio>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
 using namespace cv;
 using namespace std;
 
@@ -14,8 +16,11 @@ using namespace std;
  * @brief The ImgData class
  * This class used for image recognization.
  */
+
 class ImgData
 {
+public:
+    enum POSETYPE { TOP=1, HALF, ALL};
 private:
     friend class ATTRWAYS;      //ATTREAYS class can use imgData.
 
@@ -34,8 +39,7 @@ private:
     Mat src_ori;
     Mat src;
     Point2i head, neck, lshoud, rshoud, lelbow, relbow, lhand;
-    Point2i rhand, lhip, rhip, lknee, rknee, lank, rank;
-    enum POSETYPE { TOP=1, HALF, ALL};
+    Point2i rhand, lhip, rhip, lknee, rknee, lank, rank;        
     POSETYPE HSTYLE;
 
     //scale data;
@@ -43,7 +47,7 @@ private:
     int yoffset;
     double scale;
 
-public:
+public:    
     ImgData();
     bool preprocessed() const;
     bool getxmlDataLoadFlag() const;

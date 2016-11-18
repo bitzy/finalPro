@@ -5,7 +5,7 @@
 #include <string>
 #include <vector>
 #include "imgdata.h"
-#include "stdconfig.h"
+//#include "stdconfig.h"
 using namespace std;
 
 class ATTRWAYS;
@@ -48,7 +48,9 @@ public:
 
     //======================== inner ======================
     //attribute's recognize ways;
+private:
     int sleeveBaseWay();
+    int textureWay1();
 };
 
 #endif // WAYSINTERFACE_H
