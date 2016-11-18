@@ -2,8 +2,8 @@ delImg/*
 debug/*
 tool/*~
 tool/tool
-tool/tool.pro.*
 tool/attrRecognize/*~
-tool/configs/*~
+tool/attrRecognize/configs/*~
+tool/attrRecognize/Release/*
 build-tool-Desktop_Qt_5_3_MSVC2013_OpenGL_64bit-Debug/*
 *~
