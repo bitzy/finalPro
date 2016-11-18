@@ -1,7 +1,7 @@
 #ifndef IMGDATA_H
 #define IMGDATA_H
 
-#include "attrRecognize/stdconfig.h"
+#include "stdconfig.h"
 #include <iostream>
 #include <string>
 #include <vector>
