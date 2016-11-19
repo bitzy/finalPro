@@ -1,86 +1,122 @@
 #include "GLOBALCONFIG.h"
 
 GLOBALCONFIG GLOBALCONFIG::represant;
+int GLOBALCONFIG::maxAlternative;
+QStringList GLOBALCONFIG::attrName;
+QStringList GLOBALCONFIG::labelAttrName;
+QList<QStringList > GLOBALCONFIG::attrValues;
+QStringList GLOBALCONFIG::poseName;
+QList<int> GLOBALCONFIG::poseTypeIndex;
+bool GLOBALCONFIG::_init = init();
+
+#define sys_attrConfigFile "./configs/0attr.config"
+#define sys_poseConfigFile "./configs/0pose.config"
+
+bool GLOBALCONFIG::init() {
+    QFile file(sys_attrConfigFile);
+    if(!file.open(QFile::ReadOnly)) {
+        qDebug() << "Cann't find file:" << sys_attrConfigFile << endl;
+        qDebug() << "exit with ERROR code 10." << endl;
+        exit(10);
+    }
+    while(!file.atEnd()) {
+        QString line = file.readLine(255);
+        QStringList tmpStr;
+        tmpStr = line.simplified().split(":");
+        if(tmpStr.size() != 2) {
+            continue;
+        }
+
+        QStringList tmpValues;
+        tmpValues = tmpStr.at(1).split(";");
+        int tmpValueSize = tmpValues.size();
+        if(tmpValueSize > maxAlternative)
+            maxAlternative = tmpValueSize;
+
+        if(tmpValueSize == 1 && tmpValues.at(0).isEmpty()) {
+            labelAttrName.push_back(tmpStr.at(0));
+        } else {
+            attrName.push_back(tmpStr.at(0));
+            attrValues.push_back(tmpValues);
+        }
+    }
+    file.close();
+
+    file.setFileName(sys_poseConfigFile);
+    if(!file.open(QFile::ReadOnly)) {
+        qDebug() << "Cann't find file:" << sys_poseConfigFile << endl;
+        qDebug() << "exit with ERROR code 10." << endl;
+        exit(10);
+    }
+    while(!file.atEnd()) {
+        QString line = file.readLine(255);
+        QStringList tmpStr;
+        tmpStr = line.simplified().split(":");
+        if(tmpStr.size() != 2) {
+            continue;
+        }
+
+        poseName << tmpStr.at(0);
+        poseTypeIndex << tmpStr.at(1).toInt();
+    }
+    file.close();
+    return true;
+}
 
 int GLOBALCONFIG::getMaxAlternative() const
 {
-    return STDCONFIG::INST()->maxAlternative;
+    return maxAlternative;
 }
 
 QStringList GLOBALCONFIG::getAttrs() const
 {
-    QStringList res;
-    int size = (int)STDCONFIG::INST()->attrName.size();
-    for(int i = 0; i < size; i++) {
-        QString tmp = QString::fromStdString(STDCONFIG::INST()->attrName[i]);
-        res.push_back(tmp);
-    }
-    return res;
+    return attrName;
 }
 
 QStringList GLOBALCONFIG::getAllAttrs() const
 {
     QStringList res;
-    res << getAttrs();
-    int size = (int)STDCONFIG::INST()->labelAttrName.size();
-    for(int i = 0; i < size; i++) {
-        QString tmp = QString::fromStdString(STDCONFIG::INST()->labelAttrName[i]);
-        res.push_back(tmp);
-    }
+    res = attrName;
+    res += labelAttrName;
     return res;
 }
 
 int GLOBALCONFIG::attrKind() const
 {
-    return (int)STDCONFIG::INST()->attrName.size();
+    return attrName.size();
 }
 
 int GLOBALCONFIG::getAllKind() const
 {
-    return (int)STDCONFIG::INST()->labelAttrName.size()
-            + attrKind();
+    return attrName.size() + labelAttrName.size();
 }
 
 int GLOBALCONFIG::getIndexByName(QString name) const
-{
-    string nameStr = name.toStdString();
+{    
     int size = attrKind();
     for(int i = 0; i < size; i++) {
-        if(!STDCONFIG::INST()->attrName[i].compare(nameStr))
-            return i;
+        if(!name.compare(attrName[i])) return i;
     }
-    int size1 = (int)STDCONFIG::INST()->labelAttrName.size();
+    int size1 = (int)labelAttrName.size();
     for(int i = 0; i < size1; i++) {
-        if(!STDCONFIG::INST()->labelAttrName[i].compare(nameStr))
-            return i+size;
+        if(!name.compare(labelAttrName[i])) return i+size;
     }
+    qDebug() << "WORNING:getIndexByName return error -1!" << endl;
     return -1;
 }
 
 QString GLOBALCONFIG::getAttrNameByIndex(int index) const
 {
-    string res;
-    if(index < attrKind()) {
-        res = STDCONFIG::INST()->attrName[index];
-    } else {
-        res = STDCONFIG::INST()->labelAttrName[index-attrKind()];
-    }
-    return QString::fromStdString(res);
+    if(index < attrKind()) return attrName[index];
+    else return labelAttrName[index-attrKind()];
 }
 
 QStringList GLOBALCONFIG::getAttrValuesByattrName(QString name) const
 {
     QStringList res;
-    string nameStr = name.toStdString();
     int size = attrKind();
     for(int i = 0; i < size; i++) {
-        if(!STDCONFIG::INST()->attrName[i].compare(nameStr)) {
-            int size1 = STDCONFIG::INST()->attrValues[i].size();
-            for(int j = 0; j < size1; j++) {
-                string tmp = STDCONFIG::INST()->attrValues[i][j];
-                res.push_back(QString::fromStdString(tmp));
-            }
-        }
+        if(!attrName[i].compare(name)) return attrValues[i];
     }
     return res;
 }
@@ -89,55 +125,38 @@ QStringList GLOBALCONFIG::getAttrValuesByIndex(int index) const
 {
     QStringList res;
     if(index >= attrKind()) return res;
-    int size = STDCONFIG::INST()->attrValues[index].size();
-    for(int i = 0; i < size; i++) {
-        string tmp = STDCONFIG::INST()->attrValues[index][i];
-        res.push_back(QString::fromStdString(tmp));
-    }
-    return res;
+    return attrValues[index];
 }
 
 int GLOBALCONFIG::getIndexByAttrValue(int AttrIndex, QString value) const
 {
-    string valueStr = value.toStdString();
-    int size = STDCONFIG::INST()->attrValues[AttrIndex].size();
+    int size = attrValues[AttrIndex].size();
     for (int i = 0; i < size; i++) {
-        if(!STDCONFIG::INST()->attrValues[AttrIndex][i].compare(valueStr)) {
-            return i;
-        }
+        if(!attrValues[AttrIndex][i].compare(value)) return i;
     }
     return -1;
 }
 
 QString GLOBALCONFIG::getAttrValue(int kind, int index) const
 {
-    string tmp = STDCONFIG::INST()->attrValues[kind][index];
-    return QString::fromStdString(tmp);
+    return attrValues[kind][index];
 }
 
 int GLOBALCONFIG::getPoseCounter() const
 {
-    return STDCONFIG::INST()->poseName.size();
+    return poseName.size();
 }
 
 QStringList GLOBALCONFIG::getPoseName() const
-{
-    QStringList res;
-    int size = (int)STDCONFIG::INST()->poseName.size();
-    for(int i = 0; i < size; i++) {
-        string tmp = STDCONFIG::INST()->poseName[i];
-        res.push_back(QString::fromStdString(tmp));
-    }
-    return res;
+{    
+    return poseName;
 }
 
 int GLOBALCONFIG::getPoseIndexByName(QString name) const
 {
-    string nameStr = name.toStdString();
     int size = getPoseCounter();
     for(int i = 0; i < size; i++){
-        if(!STDCONFIG::INST()->poseName[i].compare(nameStr))
-            return i;
+        if(!poseName[i].compare(name)) return i;
     }
     return -1;
 }
@@ -145,13 +164,12 @@ int GLOBALCONFIG::getPoseIndexByName(QString name) const
 QString GLOBALCONFIG::getPoseNameByIndex(int index) const
 {
     if(index >= getPoseCounter()) return QString("error");
-    string tmp = STDCONFIG::INST()->poseName[index];
-    return  QString::fromStdString(tmp);
+    return poseName[index];
 }
 
 int GLOBALCONFIG::getPTypeIdxByIdx(int index) const
 {
     if(index >= getPoseCounter()) return 0;
-    return STDCONFIG::INST()->poseTypeIndex[index];
+    return poseTypeIndex[index];
 }
 

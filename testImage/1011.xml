@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <file name="/home/sharon/Documents/code/qt_project/finalpro/testImage/1011.jpg">
     <pose>
-        <head type="Point">223,175</head>
-        <neck type="Point">237,229</neck>
+        <head type="Point">222,154</head>
+        <neck type="Point">233,227</neck>
         <left_shoulder type="Point">160,267</left_shoulder>
         <left_elbow type="Point">99,312</left_elbow>
         <left_hand type="Point">130,199</left_hand>

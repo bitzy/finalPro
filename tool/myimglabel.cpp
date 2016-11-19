@@ -2,13 +2,14 @@
 
 #include "GLOBALCONFIG.h"
 #include "GLOBALDEFINE.h"
+#include "GLOBALFUNC.h"
 
 #include <QDomDocument>
 #include <QMouseEvent>
 #include <QTime>
 #include <QDebug>
 
-#include "attrRecognize/waysInterface.h"
+//#include "attrRecognize/waysInterface.h"
 
 GLOBALTESTPOSE GLOBALTESTPOSE::represant;
 QStringList GLOBALTESTPOSE::testname;
@@ -280,7 +281,8 @@ const QString MyImgLabel::labelTest(int attri, int wayj)
 
     QTime testTime;
     testTime.start();
-    bool ret = ATTRWAYS::instance()->recognize(imgData, attri, wayj);
+    bool ret = false;
+    //ret = ATTRWAYS::instance()->recognize(imgData, attri, wayj);
 
     if(ret) res = QString("Succeed. \nCost Time: %1 s.").arg(testTime.elapsed()/1000.0);
     else res = QString("Error!");

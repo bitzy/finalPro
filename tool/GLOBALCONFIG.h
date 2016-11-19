@@ -2,7 +2,6 @@
 #define GLOBALCONFIG_H
 
 #include "GLOBALHEADER.h"
-#include "attrRecognize/stdconfig.h"
 
 /**
  * @brief The GLOBALCONFIG class
@@ -10,6 +9,17 @@
  */
 class GLOBALCONFIG {
     static GLOBALCONFIG represant;
+
+    //attrconfig:
+    static int maxAlternative;
+    static QStringList attrName;
+    static QStringList labelAttrName;
+    static QList<QStringList > attrValues;
+    //poseconfig:
+    static QStringList poseName;
+    static QList<int> poseTypeIndex;
+    static bool _init;
+    static bool init();
     GLOBALCONFIG(){}
     GLOBALCONFIG(const GLOBALCONFIG&);
 public:

@@ -12,5 +12,6 @@
 #include <QString>
 #include <QPoint>
 #include <QStringList>
+#include <QDebug>
 
 #endif // GLOBALHEADER_H

@@ -1,13 +1,12 @@
 #include "flagform.h"
+#include "myimglabel.h"
+
 #include <QtWidgets>
 #include <QMessageBox>
 
 #include "GLOBALDEFINE.h"
 #include "GLOBALCONFIG.h"
 #include "GLOBALFUNC.h"
-#include "attrRecognize/waysInterface.h"
-
-#include "myimglabel.h"
 
 FlagForm::FlagForm(QString dir, QString storeDir)
 {
@@ -234,6 +233,7 @@ QTableWidget *FlagForm::UIcreateAttrTable()
         attrTable->setCellWidget(i, 0, combo);
 
         //way & test:
+        /*
         QComboBox *wayComboBox = new QComboBox;
         vector<string> tmplist = ATTRWAYS::instance()->getWays(attrName.toStdString());
         int size1 = tmplist.size();
@@ -242,6 +242,7 @@ QTableWidget *FlagForm::UIcreateAttrTable()
             attrTable->setCellWidget(i, 1, wayComboBox);
             attrTable->setCellWidget(i, 2, UIcreateBtn(tr("test"), SLOT(testAttr())));
         }
+        */
     }
     attrTable->setMinimumWidth(400);
     attrTable->setMaximumWidth(400);

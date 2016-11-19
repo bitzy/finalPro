@@ -24,7 +24,6 @@ class STDCONFIG
     static bool init();
     STDCONFIG(){}
     STDCONFIG(const STDCONFIG&);
-    friend class GLOBALCONFIG;
 public:
     static STDCONFIG* INST() {
         return &represant;

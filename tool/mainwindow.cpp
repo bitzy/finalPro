@@ -1,13 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "flagform.h"
 
 #include <QtWidgets>
+
 #include "GLOBALDEFINE.h"
 #include "GLOBALCONFIG.h"
 #include "GLOBALFUNC.h"
-#include "attrRecognize/waysInterface.h"
-
-#include "flagform.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -119,13 +118,14 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     vheader << "CheckOption" << "Method";
     table2->setVerticalHeaderLabels(vheader);
     for(int i = 0; i < size; i++) {
-        string attrNameTmp = GLOBALCONFIG::inst()->getAttrNameByIndex(i).toStdString();
+        QString attrNameTmp = GLOBALCONFIG::inst()->getAttrNameByIndex(i);
         //checkbox
         QCheckBox *check = new QCheckBox;
         check->setCheckState(Qt::Checked);
         table2->setCellWidget(0, i, check);
 
         //functionlist:
+        /*
         QComboBox *comboBox = new QComboBox;        
         vector<string> stdlist = ATTRWAYS::instance()->getWays(attrNameTmp);
         QStringList tmplist;
@@ -135,6 +135,7 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
         comboBox->addItems(tmplist);
         if(tmplist.size() == 0) check->setEnabled(false);
         table2->setCellWidget(1, i, comboBox);
+        */
     }
     table2->setMinimumHeight(100);
     table2->setMaximumHeight(100);
@@ -423,7 +424,7 @@ void MainWindow::sleeveBulkBegin()
     SleeveManager* srun = new SleeveManager(path, SYSTEST_DIR, method);
     srun->resize(500, 120);
     srun->exec();*/
-    cout << "ok!" << endl;
+    qDebug() << "ok!" << endl;
 }
 
 

@@ -1,12 +1,11 @@
 #ifndef MYIMGLABEL_H
 #define MYIMGLABEL_H
 
+//myimglabel <==> imgdata
+#include "attrRecognize/imgdata.h"
+
 #include <QLabel>
 #include <QPainter>
-
-#include "GLOBALFUNC.h"
-#include "flagform.h"
-#include "attrRecognize/imgdata.h"
 
 /**
  * @brief The GLOBALTESTPOSE class
@@ -57,8 +56,6 @@ private:
     QPoint curSPoint;
     QList<QPoint> labelData;
 
-    //friend void FlagForm::DoShowImg(const MyImgLabel*);
-    //friend void FlagForm::reLoadImg(MyImgLabel*);
     friend class FlagForm;
 
     bool labelDataOKFlag;
