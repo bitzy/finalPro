@@ -3,7 +3,8 @@
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-using namespace cv;
+//using namespace cv;
+
 //=================== POSE NAME =============
 #define PH  "head"
 #define PN  "neck"
@@ -95,7 +96,7 @@ void ImgData::preprocess()
 
 void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) const
 {
-    Vec3b color = _getPixelColor(Point(x1, y1));
+    cv::Vec3b color = _getPixelColor(cv::Point(x1, y1));
     r = color[2];
     g = color[1];
     b = color[0];
@@ -104,12 +105,12 @@ void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) 
 
 void ImgData::_loadManDotstd()
 {
-    vector<Point2i> manDotstd;
+    vector<cv::Point2i> manDotstd;
     int size = (int)poseDatas.size();
     for(int i = 0; i < size; i++) {
         int x = -1, y = -1;
         sscanf(poseDatas[i].c_str(), "%d,%d", &x, &y);
-        manDotstd.push_back(Point2i(x, y));
+        manDotstd.push_back(cv::Point2i(x, y));
     }
 
     head = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PH)];
@@ -128,7 +129,7 @@ void ImgData::_loadManDotstd()
     rank = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PRA)];
 }
 
-void ImgData::__resizePoint(Point &p) const
+void ImgData::__resizePoint(cv::Point &p) const
 {
     p.x = (p.x-xoffset)*scale;
     p.y = (p.y-yoffset)*scale;
@@ -152,7 +153,7 @@ void ImgData::_resizePosePoints()
     __resizePoint(rank);
 }
 
-Rect ImgData::__getBoundingBox()
+cv::Rect ImgData::__getBoundingBox()
 {
     int top = fminvalue6(head.y, lelbow.y, relbow.y, lhand.y, rhand.y);
     int left = fminvalue6(lshoud.x, lelbow.x, lhand.x, relbow.x, rhand.x, lhip.x);
@@ -198,25 +199,25 @@ Rect ImgData::__getBoundingBox()
     int outBottom = bottom + marginVertical;
     outBottom = (outBottom > imgheight?imgheight:outBottom);
 
-    Rect res(Point(outLeft, outTop), Point(outRight, outBottom));
+    cv::Rect res(cv::Point(outLeft, outTop), cv::Point(outRight, outBottom));
     return res;
 }
 
 
-void ImgData::_resizeSrcToFixedHeight(const Rect &rect, int height)
+void ImgData::_resizeSrcToFixedHeight(const cv::Rect &rect, int height)
 {    
     xoffset = rect.x;
     yoffset = rect.y;
-    Mat focusImgROI = src_ori(rect);
+    cv::Mat focusImgROI = src_ori(rect);
     scale = 1.0*height/focusImgROI.rows;
-    resize(src_ori, src, Size(), scale, scale);
+    resize(src_ori, src, cv::Size(), scale, scale);
 
     //resize Point
     _resizePosePoints();
 }
 
-Vec3b ImgData::_getPixelColor(const Point &p) const
+cv::Vec3b ImgData::_getPixelColor(const cv::Point &p) const
 {
-    Vec3b color = src_ori.at<Vec3b>(p.y, p.x);
+    cv::Vec3b color = src_ori.at<cv::Vec3b>(p.y, p.x);
     return color;
 }
