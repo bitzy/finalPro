@@ -27,7 +27,12 @@ private:
     QTableWidget* UIcreateAttrTable();
     void UIsetColor(int id, const QString& color);
 
+    /**
+     * @brief picBoard
+     * is a contain imgdata's label.
+     */
     MyImgLabel* picBoard;
+
     QPushButton* prevBtn;
     QPushButton* nextBtn;
     QPushButton* deleBtn;
@@ -98,8 +103,8 @@ protected:
 
 public:
     void showImgByIdx(int index);
-    void DoShowImg(const MyImgLabel*);
-    void reLoadImg(MyImgLabel *);
+    void imgLabelDataShow();
+    void dataRestore2Label();
     void DoShowImgNULL();
 };
 

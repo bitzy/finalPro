@@ -281,28 +281,34 @@ void FlagForm::showImgByIdx(int index)
     updateCurImgIdx(index);
     QString imgPath = dealImages[index].absoluteFilePath();
     QString xmlPath = QString("%1%2.xml").arg(storePath).arg(curImgBaseName);
-    bool ret = picBoard->labelLoad(imgPath, xmlPath);
+    bool ret = picBoard->labelLoadByXML(imgPath, xmlPath);
 
-    if(ret == true) DoShowImg(picBoard);
+    if(ret == true) imgLabelDataShow();
     else DoShowImgNULL();
 
     initialToolStatus(ret);
 }
 
-void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
+/**
+ * @brief FlagForm::DoShowImg
+ * @param imgLabel
+ * get data from imgLabel.
+ * show data to flagForm.
+ */
+void FlagForm::imgLabelDataShow()
 {
-    //posedata:
-    int size = imgLabel->imgData.getPoseDatas().size();
+    //posedata: 
+    int size = picBoard->labelDataGetPoseDatas().size();
     for(int i = 0; i < size; i++) {
-        QString tmpValue = QString::fromStdString(imgLabel->imgData.getPoseDatas()[i]);
+        QString tmpValue = picBoard->labelDataGetPoseDatas()[i];
         QTableWidgetItem* tmp = new QTableWidgetItem(tmpValue);
         poseTable->setItem(i, 0, tmp);
     }
     //attrdata:
-    int size1 = imgLabel->imgData.getAttrDatas().size();
+    int size1 = picBoard->labelDataGetAttrDatas().size();
     for(int i = 0; i < size1; i++) {
         QComboBox *tmp = (QComboBox*)attrTable->cellWidget(i, 0);
-        QString tmpValue = QString::fromStdString(imgLabel->imgData.getAttrDatas()[i]);
+        QString tmpValue = picBoard->labelDataGetAttrDatas()[i];
         int tmpIdx = tmp->findText(tmpValue);
         if(tmpIdx == -1) {
             tmp->clear();
@@ -318,15 +324,15 @@ void FlagForm::DoShowImg(const MyImgLabel * imgLabel)
     }
     //label:
     int x = GLOBALCONFIG::inst()->getIndexByName("Color1");
-    UIsetColor(1, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x]));
-    UIsetColor(2, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x+1]));
-    UIsetColor(3, QString::fromStdString(imgLabel->imgData.getAttrDatas()[x+2]));
+    UIsetColor(1, picBoard->labelDataGetAttrDatas()[x]);
+    UIsetColor(2, picBoard->labelDataGetAttrDatas()[x+1]);
+    UIsetColor(3, picBoard->labelDataGetAttrDatas()[x+2]);
 }
 
-void FlagForm::reLoadImg(MyImgLabel * imgLabel)
+void FlagForm::dataRestore2Label()
 {
     //posedata:
-    vector<string> tmpData;
+    QStringList tmpData;
     int size = poseTable->rowCount();
     for(int i = 0; i < size; i++) {
         QTableWidgetItem *tmp = poseTable->item(i, 0);
@@ -337,22 +343,21 @@ void FlagForm::reLoadImg(MyImgLabel * imgLabel)
         if(tmpStr.compare("null") == 0) {
             QString tmpValue("-1");
             for(int j = 1; j < tmpSize; j++) tmpValue.append(",-1");
-            tmpData.push_back(tmpValue.toStdString());
-        } else tmpData.push_back(tmpStr.toStdString());
+            tmpData.push_back(tmpValue);
+        } else tmpData.push_back(tmpStr);
     }
-    imgLabel->imgData.setPoseDatas(tmpData);
+    //picBoard->labelDataSetPoseData(tmpData);
+
     //attrdata:
-    tmpData.clear();
+    QStringList tmpData1;
     int size1 = attrTable->rowCount();
     for(int i = 0; i < size1; i++) {
         QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
         QString tmpStr = tmp->currentText();
 
-        tmpData.push_back(tmpStr.toStdString());
+        tmpData1.push_back(tmpStr);
     }
-    imgLabel->imgData.setAttrDatas(tmpData);
-    imgLabel->imgData.setXmlDataLoadFlag(true);
-    imgLabel->labelDataOKFlag = true;
+    picBoard->labelDataBySet(tmpData, tmpData1);
 }
 
 void FlagForm::DoShowImgNULL()
@@ -744,8 +749,8 @@ void FlagForm::skipAttrImg()
 
 void FlagForm::submitImg()
 {
-    reLoadImg(picBoard);
-    picBoard->labelRefreshPoseData();
+    dataRestore2Label();//data submit to imgdata
+    picBoard->labelRefreshPoseData();//label refresh
     if(picBoard->labelSave()) {
         initialToolStatus(true);
         isPoseLabel = false;

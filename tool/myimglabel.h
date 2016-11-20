@@ -2,7 +2,7 @@
 #define MYIMGLABEL_H
 
 //myimglabel <==> imgdata
-#include "attrRecognize/imgdata.h"
+//#include "attrRecognize/imgdata.h"
 
 #include <QLabel>
 #include <QPainter>
@@ -56,21 +56,33 @@ private:
     QPoint curSPoint;
     QList<QPoint> labelData;
 
-    friend class FlagForm;
+    //friend class FlagForm;
 
     bool labelDataOKFlag;
-    ImgData imgData;
-    bool _loadxmlData(ImgData& data);
-    bool _savexmlData(const ImgData& data);
+    //ImgData imgData;
+    //bool _loadxmlData(ImgData& data);
+    //bool _savexmlData(const ImgData& data);
     QString _int2color(int v) const;
 
 public:
     MyImgLabel();
-    bool labelLoad(const QString& img, const QString& xml);
+    //load xml data for this label
+    bool labelLoadByXML(const QString& img, const QString& xml);
+    void labelDataBySet(const QStringList& pose, const QStringList& attr);
+
+private:
+    void labelDataSetPoseData(const QStringList& poseDatas);
+    void labelDataSetAttrData(const QStringList& attrDatas);
+
+public:
     void labelReset();
     bool labelSave();
     void labelRefreshPoseData();
     const QString labelTest(int attri, int wayj);
+
+    //get data from label;
+    const QStringList labelDataGetPoseDatas() const;
+    const QStringList labelDataGetAttrDatas() const;
 
     void drawingSwitch(bool);
     void skipCurrentData();
