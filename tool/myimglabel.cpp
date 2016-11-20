@@ -75,8 +75,10 @@ void MyImgLabel::updateLabelIdx(int idx)
 QString MyImgLabel::getColor(const QPoint &pos) const
 {
     QString res;
-    int r, g, b;
-    imgData.getPointColor(pos.x(), pos.y(), r, g, b);
+    int r = 0, g = 0, b = 0;
+    if(labelDataOKFlag) {
+        //imgData.getPointColor(pos.x(), pos.y(), r, g, b);
+    }
     res.append(_int2color(r));
     res.append(_int2color(g));
     res.append(_int2color(b));
@@ -102,6 +104,7 @@ void MyImgLabel::initialDrawingStatus()
  * @param data
  * @return
  */
+/*
 bool MyImgLabel::_loadxmlData(ImgData &data)
 {
     if(data.getMYXML().empty()) return false;
@@ -140,6 +143,7 @@ bool MyImgLabel::_loadxmlData(ImgData &data)
     data.setXmlDataLoadFlag(true);
     return true;
 }
+*/
 
 /**
  * @brief MyImgLabel::_savexmlData
@@ -147,6 +151,7 @@ bool MyImgLabel::_loadxmlData(ImgData &data)
  * @param data
  * @return
  */
+/*
 bool MyImgLabel::_savexmlData(const ImgData &data)
 {
     QString cmd;
@@ -202,6 +207,7 @@ bool MyImgLabel::_savexmlData(const ImgData &data)
     file.close();
     return true;
 }
+*/
 
 QString MyImgLabel::_int2color(int v) const
 {
@@ -223,11 +229,12 @@ MyImgLabel::MyImgLabel()
  * @param xml
  * @return
  */
-bool MyImgLabel::labelLoad(const QString &img, const QString &xml)
+bool MyImgLabel::labelLoadByXML(const QString &img, const QString &xml)
 {
     //img data:
-    imgData.loadImg(img.toStdString(), xml.toStdString());
-    labelDataOKFlag = _loadxmlData(imgData);
+    //    labelDataOKFlag = imgData.loadImg(
+    //                img.toStdString(), xml.toStdString());
+
 
     image.load(img);
     showImage = image.copy();
@@ -240,9 +247,32 @@ bool MyImgLabel::labelLoad(const QString &img, const QString &xml)
     return labelDataOKFlag;
 }
 
+void MyImgLabel::labelDataBySet(const QStringList &pose, const QStringList &attr)
+{
+    labelDataSetPoseData(pose);
+    labelDataSetAttrData(attr);
+    labelDataOKFlag = true;
+}
+
+void MyImgLabel::labelDataSetPoseData(const QStringList &poseDatas)
+{
+    //imgData.setPoseDatas(poseDatas);
+}
+
+void MyImgLabel::labelDataSetAttrData(const QStringList &attrDatas)
+{
+    //imgData.setAttrDatas(attrDatas);
+}
+
+
+/**
+ * @brief MyImgLabel::labelRefreshPoseData
+ * refresh the label content by imgData
+ */
 void MyImgLabel::labelRefreshPoseData()
 {
     if(!labelDataOKFlag) return;
+    /*
     painter.begin(&showImage);
     setMyPen();
 
@@ -273,6 +303,7 @@ void MyImgLabel::labelRefreshPoseData()
     showImageCopy = showImage;
     painter.end();
     update();
+    */
 }
 
 const QString MyImgLabel::labelTest(int attri, int wayj)
@@ -289,6 +320,30 @@ const QString MyImgLabel::labelTest(int attri, int wayj)
     return res;
 }
 
+const QStringList MyImgLabel::labelDataGetPoseDatas() const
+{
+    QStringList res;
+    /*
+    vector<string> tmp = imgData.getPoseDatas();
+    int size = tmp.size();
+    for(int i = 0; i < size; i++)
+        res << QString::fromStdString(tmp[i]);
+    */
+    return res;
+}
+
+const QStringList MyImgLabel::labelDataGetAttrDatas() const
+{
+    QStringList res;
+    /*
+    vector<string> tmp = imgData.getAttrDatas();
+    int size = tmp.size();
+    for(int i = 0; i < size; i++)
+        res << QString::fromStdString(tmp[i]);
+       */
+    return res;
+}
+
 void MyImgLabel::labelReset()
 {
     showImage = image.copy();
@@ -298,7 +353,8 @@ void MyImgLabel::labelReset()
 
 bool MyImgLabel::labelSave()
 {
-    return _savexmlData(imgData);
+    //return _savexmlData(imgData);
+    return true;
 }
 
 void MyImgLabel::paintEvent(QPaintEvent * /*event*/)

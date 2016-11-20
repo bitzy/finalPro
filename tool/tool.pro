@@ -41,8 +41,6 @@ HEADERS  += mainwindow.h \
 
 FORMS    += mainwindow.ui
 
-RESOURCES +=
-
 win32{
     INCLUDEPATH += C:\Users\sharon\Downloads\opencv\build\include \
         C:\Users\sharon\Downloads\opencv\build\include\opencv \
