@@ -76,17 +76,44 @@ vector<string> ATTRWAYS::getWays(string name) const
  */
 bool ATTRWAYS::recognize(ImgData &img, int attri, int wayj)
 {    
-    if(_between(attri, 0, attrWays.size()) &&
-            _between(wayj, 0, attrWays[attri].size())) {
-        attrIdx = attri;
-        waysIdx = wayj;
-        if(img.getxmlDataLoadFlag() == false) img.preprocess();
-        ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
-        result = (this->*func)();
-        return true;
-    }
-    /*cout << "attri:"  << attri << ";" << "wayj:" << wayj << endl;*/
+    if(_between(attri, 0, attrWays.size())) {
+        if(_between(wayj, 0, attrWays[attri].size())) {
+            attrIdx = attri;
+            waysIdx = wayj;
+            result = -1;
+            if(img.getxmlDataLoadFlag() == false) img.preprocess();
+            ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
+            result = (this->*func)();
+            return true;
+        } else cout <<"wayIdx is error!" << endl;
+    } else cout << "attrIdx is error!" << endl;
     return false;
 
+}
+
+string ATTRWAYS::getresult()
+{
+    string res = "[\tnot any answer!\t]\n\n";
+    if (result != -1) {
+        stringstream ss;
+        ss << "[\t" << result << "\t]\n\n";
+        res = ss.str();
+    }
+    return res;
+}
+
+string ATTRWAYS::getWaysDetail() const
+{
+    string res;
+    int size = funcAttrType.size();
+    for(int i = 0; i < size; i++) {
+        res += funcAttrType[i];
+        res += ":";
+        stringstream ss;
+        ss << attrWays[i].size();
+        res += ss.str();
+        res += "\n";
+    }
+    return res;
 }
 

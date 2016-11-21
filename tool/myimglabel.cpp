@@ -330,6 +330,14 @@ bool MyImgLabel::labelSave()
     }
     doc.save(out, 4, QDomNode::EncodingFromTextStream);
     file.close();
+
+    //delete bak file;
+    /*
+    QString xmlBKpath = xmlpath.append(".bak");
+    if(GLOBALFUNC::inst()->confirmFileExist(xmlBKpath)) {
+        cmd = QString("rm ").arg(xmlBKpath);
+        system(cmd.toStdString().c_str());
+    }*/
     return true;
 }
 

@@ -5,7 +5,6 @@
 #include <string>
 #include <vector>
 #include "imgdata.h"
-//#include "stdconfig.h"
 using namespace std;
 
 class ATTRWAYS;
@@ -45,6 +44,8 @@ public:
     vector<string> getWays(string name) const;
     //recognize img's attribute i by way j;
     bool recognize(ImgData& img, int attri, int wayj);
+    string getresult();
+    string getWaysDetail() const;
 
     //======================== inner ======================
     //attribute's recognize ways;

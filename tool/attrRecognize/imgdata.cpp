@@ -76,16 +76,15 @@ void ImgData::setAttrDatas(const vector<string> &data)
     attrDatas.assign(data.begin(), data.end());
 }
 
-
 void ImgData::setIMGpath(const string img, const string xml)
 {
     MYIMG = img;
     MYXML = xml;
     src_ori = cv::imread(MYIMG);
 
+    okFlag = true;
     preprocessFlag = false;
     xmlDataLoadFlag = false;
-    okFlag = true;
 }
 
 //do the process step for all images.
