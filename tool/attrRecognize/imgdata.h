@@ -6,29 +6,37 @@
 #include <string>
 #include <vector>
 #include <cstdio>
+
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
-//using namespace cv;
 using namespace std;
 
 /**
  * @brief The ImgData class
  * This class used for image recognization.
+ *
+ * You must "1) setIMGpath;" first
+ * to confirm src_ori is ok.
+ * then you do save & recognize operation.
+ *
+ * this is confirmed by
+ *
  */
 
 class ImgData
 {
 public:
     enum POSETYPE { TOP=1, HALF, ALL};
+
 private:
     friend class ATTRWAYS;      //ATTREAYS class can use imgData.
 
+    bool okFlag;
     bool preprocessFlag;
     bool xmlDataLoadFlag;
     string MYIMG;
     string MYXML;
-
     //external function load standard poseDatas & attrDatas;
     vector<string> poseDatas;   //image standard pose data;
     vector<string> attrDatas;   //image standard attr data;
@@ -49,6 +57,7 @@ private:
 
 public:    
     ImgData();
+    bool getOKflag() const;
     bool preprocessed() const;
     bool getxmlDataLoadFlag() const;
     void setXmlDataLoadFlag(const bool flag);
@@ -60,7 +69,7 @@ public:
     void setAttrDatas(const vector<string> &data);
 
     //You must set img's path & corresponding xml's path;
-    void loadImg(const string img, const string xml);
+    void setIMGpath(const string img, const string xml);
     void preprocess();
     void getPointColor(const int x1, const int y1, int&r, int&g, int&b) const;
 private:

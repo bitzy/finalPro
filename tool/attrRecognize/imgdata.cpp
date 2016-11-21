@@ -22,7 +22,13 @@
 #define PRA "right_ankle"
 //=================== POSE NAME =============
 
-ImgData::ImgData() {
+ImgData::ImgData(){
+    okFlag = false;
+}
+
+bool ImgData::getOKflag() const
+{
+    return okFlag;
 }
 
 bool ImgData::preprocessed() const
@@ -55,23 +61,23 @@ const vector<string>& ImgData::getPoseDatas() const
     return poseDatas;
 }
 
-const vector<string> &ImgData::getAttrDatas() const
+const vector<string>& ImgData::getAttrDatas() const
 {
     return attrDatas;
 }
 
 void ImgData::setPoseDatas(const vector<string> &data)
-{
-    poseDatas = data;
+{    
+    poseDatas.assign(data.begin(), data.end());
 }
 
 void ImgData::setAttrDatas(const vector<string> &data)
 {
-    attrDatas = data;
+    attrDatas.assign(data.begin(), data.end());
 }
 
 
-void ImgData::loadImg(const string img, const string xml)
+void ImgData::setIMGpath(const string img, const string xml)
 {
     MYIMG = img;
     MYXML = xml;
@@ -79,6 +85,7 @@ void ImgData::loadImg(const string img, const string xml)
 
     preprocessFlag = false;
     xmlDataLoadFlag = false;
+    okFlag = true;
 }
 
 //do the process step for all images.

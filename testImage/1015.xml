@@ -1,35 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<file name="C:/Users/sharon/code/finalPro/finalPro/testImage/1015.jpg">
+<file name="/home/sharon/Documents/code/qt_project/finalpro/testImage/1015.jpg">
     <pose>
-        <head type="Point">234,66</head>
-        <neck type="Point">273,149</neck>
-        <left_shoulder type="Point">194,212</left_shoulder>
-        <left_elbow type="Point">206,356</left_elbow>
-        <left_hand type="Point">200,499</left_hand>
-        <right_shoulder type="Point">354,164</right_shoulder>
-        <right_elbow type="Point">395,301</right_elbow>
-        <right_hand type="Point">422,444</right_hand>
-        <left_hip type="Point">277,443</left_hip>
-        <left_knee type="Point">287,614</left_knee>
-        <left_ankle type="Point">284,770</left_ankle>
-        <right_hip type="Point">371,435</right_hip>
-        <right_knee type="Point">367,614</right_knee>
-        <right_ankle type="Point">330,793</right_ankle>
-        <L_Sleeve type="Line">196,459,220,461</L_Sleeve>
-        <R_Sleeve type="Line">403,401,424,392</R_Sleeve>
-        <Lenth type="Line">256,483,391,436</Lenth>
-        <HSIColor1 type="Rectangle">287,310,310,334</HSIColor1>
-        <HSIColor2 type="Rectangle">-1,-1,-1,-1</HSIColor2>
-        <HSIColor3 type="Rectangle">-1,-1,-1,-1</HSIColor3>
+        <head type="Point">225,55</head>
+        <neck type="Point">266,157</neck>
+        <left_shoulder type="Point">195,210</left_shoulder>
+        <left_elbow type="Point">203,370</left_elbow>
+        <left_hand type="Point">211,503</left_hand>
+        <right_shoulder type="Point">347,161</right_shoulder>
+        <right_elbow type="Point">400,291</right_elbow>
+        <right_hand type="Point">421,423</right_hand>
+        <left_hip type="Point">264,457</left_hip>
+        <left_knee type="Point">278,606</left_knee>
+        <left_ankle type="Point">286,787</left_ankle>
+        <right_hip type="Point">377,441</right_hip>
+        <right_knee type="Point">384,607</right_knee>
+        <right_ankle type="Point">346,774</right_ankle>
+        <L_Sleeve type="Line">186,477,211,475</L_Sleeve>
+        <R_Sleeve type="Line">-1,-1,-1,-1</R_Sleeve>
+        <Lenth type="Line">253,467,343,432</Lenth>
+        <HSIColor1 type="Point">289,303</HSIColor1>
+        <HSIColor2 type="Point">-1,-1</HSIColor2>
+        <HSIColor3 type="Point">-1,-1</HSIColor3>
     </pose>
     <attr>
-        <collar>F-collar</collar>
+        <collar>Round</collar>
         <sleeve>s_long</sleeve>
         <up_length>normal</up_length>
         <texture>Single</texture>
-        <sleeveValue>83.2</sleeveValue>
-        <lenthValue>47.8</lenthValue>
-        <Color1>0</Color1>
+        <sleeveValue>89.5</sleeveValue>
+        <lenthValue>46.7</lenthValue>
+        <Color1>696562</Color1>
         <Color2>null</Color2>
         <Color3>null</Color3>
     </attr>

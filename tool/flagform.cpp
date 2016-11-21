@@ -279,14 +279,15 @@ void FlagForm::UIsetColor(int id, const QString &color)
 void FlagForm::showImgByIdx(int index)
 {
     updateCurImgIdx(index);
+
+    //label load data:
     QString imgPath = dealImages[index].absoluteFilePath();
     QString xmlPath = QString("%1%2.xml").arg(storePath).arg(curImgBaseName);
-    bool ret = picBoard->labelLoadByXML(imgPath, xmlPath);
-
-    if(ret == true) imgLabelDataShow();
-    else DoShowImgNULL();
-
-    initialToolStatus(ret);
+    if(picBoard->labelLoadDataByXML(imgPath, xmlPath)) {//img has data;
+        imgLabelDataShow();
+    } else {//img has no data;
+        DoShowImgNULL();
+    }
 }
 
 /**
@@ -297,7 +298,8 @@ void FlagForm::showImgByIdx(int index)
  */
 void FlagForm::imgLabelDataShow()
 {
-    //posedata: 
+    //get label data & show to flagform:
+    //posedata:
     int size = picBoard->labelDataGetPoseDatas().size();
     for(int i = 0; i < size; i++) {
         QString tmpValue = picBoard->labelDataGetPoseDatas()[i];
@@ -327,43 +329,17 @@ void FlagForm::imgLabelDataShow()
     UIsetColor(1, picBoard->labelDataGetAttrDatas()[x]);
     UIsetColor(2, picBoard->labelDataGetAttrDatas()[x+1]);
     UIsetColor(3, picBoard->labelDataGetAttrDatas()[x+2]);
+
+    initialToolStatus(true);
 }
 
-void FlagForm::dataRestore2Label()
-{
-    //posedata:
-    QStringList tmpData;
-    int size = poseTable->rowCount();
-    for(int i = 0; i < size; i++) {
-        QTableWidgetItem *tmp = poseTable->item(i, 0);
-        QString tmpStr = tmp->text();
-
-        int tmpType = GLOBALCONFIG::inst()->getPTypeIdxByIdx(i);
-        int tmpSize = GLOBALDEFINE::BASEDATA_DATANUMS[tmpType];
-        if(tmpStr.compare("null") == 0) {
-            QString tmpValue("-1");
-            for(int j = 1; j < tmpSize; j++) tmpValue.append(",-1");
-            tmpData.push_back(tmpValue);
-        } else tmpData.push_back(tmpStr);
-    }
-    //picBoard->labelDataSetPoseData(tmpData);
-
-    //attrdata:
-    QStringList tmpData1;
-    int size1 = attrTable->rowCount();
-    for(int i = 0; i < size1; i++) {
-        QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
-        QString tmpStr = tmp->currentText();
-
-        tmpData1.push_back(tmpStr);
-    }
-    picBoard->labelDataBySet(tmpData, tmpData1);
-}
-
+//no image xml data:
 void FlagForm::DoShowImgNULL()
 {
+    //pose table;
     poseTable->clearContents();
     int size = GLOBALCONFIG::inst()->getAllKind();
+    //attr table;
     for(int i = 0; i < size; i++) {
         QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
         if(tmp->count() == 1) {
@@ -376,6 +352,12 @@ void FlagForm::DoShowImgNULL()
         tmp = (QComboBox*)attrTable->cellWidget(i, 2);
         if(tmp) tmp->setEnabled(false);
     }
+    //all btns;
+    initialToolStatus(false);
+    //all ui;
+    UIsetColor(1, "null");
+    UIsetColor(2, "null");
+    UIsetColor(3, "null");
 }
 
 void FlagForm::updateCurImgIdx(int idx)
@@ -401,6 +383,7 @@ void FlagForm::updateCurImgIdx(int idx)
 
 void FlagForm::updatePosLabelIdx(int idx)
 {
+    //change flagform label index & label inner index;
     poseLabelIdx = idx;
     poseTable->selectRow(idx);
     picBoard->updateLabelIdx(idx);
@@ -430,7 +413,7 @@ void FlagForm::initialToolStatus(bool status)
         reviseBtn->setDisabled(true);//no revise
         skipAttrBtn->setDisabled(false);//can skip attr
     }
-    //submitBtn->setDisabled(true);// no submit
+    submitBtn->setDisabled(true);// no submit
 }
 
 void FlagForm::updateToolBtn()
@@ -684,7 +667,7 @@ void FlagForm::nextImg()
                     "Change not saved, confirm to the next one?",
                     QMessageBox::Ok | QMessageBox::Cancel);
         if(ret == 0x00400000) return;
-    }    
+    }
     showImgByIdx(curImgIndex + 1);
 }
 
@@ -747,10 +730,43 @@ void FlagForm::skipAttrImg()
     picBoard->skipCurrentData();
 }
 
+/**
+ * @brief FlagForm::submitImg
+ * submit the data to label & store the data to file.
+ */
 void FlagForm::submitImg()
 {
-    dataRestore2Label();//data submit to imgdata
-    picBoard->labelRefreshPoseData();//label refresh
+    //change label data from flagform:
+    //posedata:
+    QStringList tmpData;
+    int size = poseTable->rowCount();
+    for(int i = 0; i < size; i++) {
+        QTableWidgetItem *tmp = poseTable->item(i, 0);
+        QString tmpStr = tmp->text();
+
+        int tmpType = GLOBALCONFIG::inst()->getPTypeIdxByIdx(i);
+        int tmpSize = GLOBALDEFINE::BASEDATA_DATANUMS[tmpType];
+        if(tmpStr.compare("null") == 0) {
+            QString tmpValue("-1");
+            for(int j = 1; j < tmpSize; j++) tmpValue.append(",-1");
+            tmpData.push_back(tmpValue);
+        } else tmpData.push_back(tmpStr);
+    }
+    //attrdata:
+    QStringList tmpData1;
+    int size1 = attrTable->rowCount();
+    for(int i = 0; i < size1; i++) {
+        QComboBox* tmp = (QComboBox*)attrTable->cellWidget(i, 0);
+        QString tmpStr = tmp->currentText();
+
+        tmpData1.push_back(tmpStr);
+    }
+    //sync data to label imgdata.
+    picBoard->labelLoadDataByData(
+                tmpData,
+                tmpData1);
+
+    //save data:
     if(picBoard->labelSave()) {
         initialToolStatus(true);
         isPoseLabel = false;

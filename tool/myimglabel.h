@@ -1,11 +1,12 @@
 #ifndef MYIMGLABEL_H
 #define MYIMGLABEL_H
 
-//myimglabel <==> imgdata
-//#include "attrRecognize/imgdata.h"
-
 #include <QLabel>
 #include <QPainter>
+#include <string>
+#include <vector>
+using namespace std;
+class ImgData;
 
 /**
  * @brief The GLOBALTESTPOSE class
@@ -56,28 +57,20 @@ private:
     QPoint curSPoint;
     QList<QPoint> labelData;
 
-    //friend class FlagForm;
-
-    bool labelDataOKFlag;
-    //ImgData imgData;
+    ImgData* imgData;
     //bool _loadxmlData(ImgData& data);
-    //bool _savexmlData(const ImgData& data);
     QString _int2color(int v) const;
+    vector<string> QString2StdVec(const QStringList&);
+    void labelRefreshPoseData(); //show pose data on label;
 
 public:
     MyImgLabel();
     //load xml data for this label
-    bool labelLoadByXML(const QString& img, const QString& xml);
-    void labelDataBySet(const QStringList& pose, const QStringList& attr);
-
-private:
-    void labelDataSetPoseData(const QStringList& poseDatas);
-    void labelDataSetAttrData(const QStringList& attrDatas);
-
-public:
-    void labelReset();
-    bool labelSave();
-    void labelRefreshPoseData();
+    bool labelLoadDataByXML(const QString& img, const QString& xml);
+    void labelLoadDataByData(const QStringList& pose,
+                        const QStringList& attr);
+    void labelReset();//just reset the image content; not label index;    
+    bool labelSave(); //save imgdata to disk;
     const QString labelTest(int attri, int wayj);
 
     //get data from label;
@@ -85,9 +78,9 @@ public:
     const QStringList labelDataGetAttrDatas() const;
 
     void drawingSwitch(bool);
-    void skipCurrentData();
-    void updateLabelIdx(int idx);    
-    QString getColor(const QPoint& pos) const;
+    void updateLabelIdx(int idx);//outer control label index;
+    void skipCurrentData();   //skip current label data;
+    QString getColor(const QPoint& pos) const; //get color from label point
 
 protected:
     void paintEvent(QPaintEvent* event);

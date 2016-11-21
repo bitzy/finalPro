@@ -104,7 +104,6 @@ protected:
 public:
     void showImgByIdx(int index);
     void imgLabelDataShow();
-    void dataRestore2Label();
     void DoShowImgNULL();
 };
 
