@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     attrRecognize/sleeveways.cpp \
     attrRecognize/stdconfig.cpp \
     attrRecognize/imgdata.cpp \
-    attrRecognize/mytool.cpp
+    attrRecognize/mytool.cpp \
+    attrRecognize/textureWays.cpp \
+    attrRecognize/superpixeltool.cpp
 
 HEADERS  += mainwindow.h \
     GLOBALDEFINE.h \
@@ -37,7 +39,8 @@ HEADERS  += mainwindow.h \
     myimglabel.h \
     attrRecognize/stdconfig.h \
     attrRecognize/imgdata.h \
-    attrRecognize/mytool.h
+    attrRecognize/mytool.h \
+    attrRecognize/superpixeltool.h
 
 FORMS    += mainwindow.ui
 

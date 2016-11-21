@@ -41,6 +41,7 @@ bool ImgData::getxmlDataLoadFlag() const
     return xmlDataLoadFlag;
 }
 
+//xmlDataload load through xmlFile.
 void ImgData::setXmlDataLoadFlag(const bool flag)
 {
     xmlDataLoadFlag = flag;
@@ -90,22 +91,26 @@ void ImgData::setIMGpath(const string img, const string xml)
 //do the process step for all images.
 void ImgData::preprocess()
 {
-    if(!getxmlDataLoadFlag()) {        
+    if(!okFlag || !getxmlDataLoadFlag()) {
         cout << "Data Struct not load xml data yet!" << endl;
         cout << "exit with ERROR code 12." << endl;
         exit(12);
-    }    
-    _loadManDotstd();
-    _resizeSrcToFixedHeight(__getBoundingBox());
+    }
+
+    //preprocess for all image:
+    _loadManDotstd(); //get man dot point from poseDatas;
+    _resizeSrcToFixedHeight(__getBoundingBox()); //fixed hegiht;
     preprocessFlag = true;
 }
 
 void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) const
 {
-    cv::Vec3b color = _getPixelColor(cv::Point(x1, y1));
-    r = color[2];
-    g = color[1];
-    b = color[0];
+    if(okFlag) {
+        cv::Vec3b color = _getPixelColor(cv::Point(x1, y1));
+        r = color[2];
+        g = color[1];
+        b = color[0];
+    } else r = g = b = 0;
 }
 
 

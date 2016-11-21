@@ -33,7 +33,7 @@ public:
     int attrKind() const;
     int getAllKind() const;
     //int getIndexByName(const string name) const;
-    //string getAttrNameByIndex(int index) const;
+    string getAttrNameByIndex(int index) const;
     //QStringList getAttrValuesByattrName(QString name) const;
     //QStringList getAttrValuesByIndex(int index) const;
     //int getIndexByAttrValue(int AttrIndex, const string value) const;
@@ -42,7 +42,7 @@ public:
     int getPoseCounter() const;
     //QStringList getPoseName() const;
     int getPoseIndexByName(const string name) const;
-    //string getPoseNameByIndex(int index) const;
+    string getPoseNameByIndex(int index) const;
     int getPTypeIdxByIdx(int index) const;
 };
 

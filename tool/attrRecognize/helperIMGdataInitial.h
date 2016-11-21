@@ -10,7 +10,6 @@ bool loadxml2imgdata(const string &fpath, ImgData& data) {
     try{
         //vector<string> posedata;
         //vector<string> attrdata;
-
         TiXmlDocument *myDocument = new TiXmlDocument(fpath.c_str());
         myDocument->LoadFile();
         TiXmlElement *rootElement = myDocument->RootElement();

@@ -24,6 +24,7 @@ int main()
 
     printf("\n\nload xml data...");
     ImgData imgdata;
+    imgdata.setIMGpath(imgpath, xmlpath);
     if(loadxml2imgdata(xmlpath, imgdata)) {
         printf("==> data load succeed!\n");
     }

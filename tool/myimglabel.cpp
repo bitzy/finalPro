@@ -184,6 +184,8 @@ void MyImgLabel::labelLoadDataByData(
 {
     imgData->setPoseDatas(QString2StdVec(pose));
     imgData->setAttrDatas(QString2StdVec(attr));
+    imgData->setXmlDataLoadFlag(true);
+
     initialDrawingStatus();
     labelRefreshPoseData();
 }

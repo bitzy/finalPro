@@ -98,13 +98,13 @@ int STDCONFIG::getIndexByName(const string name) const
             return i+size;
     }
     return -1;
-}
+}*/
 
 string STDCONFIG::getAttrNameByIndex(int index) const
 {
     if(index < attrKind()) return attrName[index];
     else return labelAttrName[index-attrKind()];
-}*/
+}
 
 int STDCONFIG::getPoseCounter() const
 {
@@ -120,12 +120,11 @@ int STDCONFIG::getPoseIndexByName(const string name) const
     return -1;
 }
 
-/*
 string STDCONFIG::getPoseNameByIndex(int index) const
 {
-    if(index >= getPoseCounter()) exit(14);
+    if(index >= getPoseCounter()) return "error";
     return poseName[index];
-}*/
+}
 
 int STDCONFIG::getPTypeIdxByIdx(int index) const
 {

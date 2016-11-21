@@ -31,8 +31,6 @@ deps		:= $(addprefix $(BIN_DIR)/,$(strip $(sources_cpp:.cpp=.d) $(sources_c:.c=.
 $(foreach dirname,$(sort $(dir $(sources_c) $(sources_cpp))),\
 	$(shell $(MKDIR) $(BIN_DIR)/$(dirname)))
 
-#copy resource
-
 #compile & link variable
 CFLAGS 	:= $(if $(DEBUG),-g -O, -O2)
 CFLAGS	+= $(addprefix -I ,$(sort $(dir $(sources_h))))
@@ -40,6 +38,8 @@ CXXFLAGS = $(CFLAGS) `pkg-config --cflags opencv`
 LDFLAGS	:=
 LOADLIBS+= `pkg-config --libs opencv`
 LDLIBS	+= #-lpthread -lmysqlclient
+PKG_CONFIG_PATH := /usr/local/opencv3/lib/pkgconfig
+LD_LIBRARY_PATH := /usr/local/opencv3/lib
 
 #add vpath
 vpath %.h $(sort $(dir $(sources_h)))
@@ -84,7 +84,10 @@ endef
 #call add-target
 $(foreach targ,$(TARGET_PROG),$(eval $(call add-target,$(targ),$(objs),$(CXX))))
 
-all: $(REAL_TARGET) $(TARGET_LIBS)
+all:
+	export $(PKD_CONFIG_PATH)
+	export $(LD_LIBRARY_PATH) 
+	$(REAL_TARGET) $(TARGET_LIBS)	
 
 clean:
 	$(RM) $(BIN_DIR)

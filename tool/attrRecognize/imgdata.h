@@ -30,7 +30,7 @@ private:
     friend class ATTRWAYS;
 
     //---------- layout setting: -------------------------------
-    bool okFlag;
+    bool okFlag;    //image's set flag;
     string MYIMG;
     string MYXML;
     //external function load standard poseDatas & attrDatas;
@@ -62,13 +62,12 @@ public:
     void setIMGpath(const string img, const string xml);
 
     //inner variable:
-    bool preprocessed() const;
-    bool getxmlDataLoadFlag() const;
-    void setXmlDataLoadFlag(const bool flag);
+    bool preprocessed() const;   
     const string& getMYIMG() const;
     const string& getMYXML() const;
     const vector<string> &getPoseDatas() const;
     const vector<string> &getAttrDatas() const;
+    void setXmlDataLoadFlag(const bool flag);
     void setPoseDatas(const vector<string> &data);
     void setAttrDatas(const vector<string> &data);
 
@@ -85,6 +84,7 @@ private:
     cv::Rect __getBoundingBox();
     void _resizeSrcToFixedHeight(const cv::Rect& rect, int height = 800);
     cv::Vec3b _getPixelColor(const cv::Point& p) const;
+    bool getxmlDataLoadFlag() const;    
 };
 
 #endif // IMGDATA_H

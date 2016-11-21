@@ -33,6 +33,7 @@ class ATTRWAYS {
     inline bool _between(int x, int l, int r);
 
     //bool debug;
+    ImgData* imgTarget;
     int attrIdx;    //recognize the attrIdx attribute;
     int waysIdx;    //recognize by the way of waysIdx;
     int result;     //recognize result    

@@ -78,17 +78,16 @@ bool ATTRWAYS::recognize(ImgData &img, int attri, int wayj)
 {    
     if(_between(attri, 0, attrWays.size())) {
         if(_between(wayj, 0, attrWays[attri].size())) {
+            imgTarget = &img;
             attrIdx = attri;
             waysIdx = wayj;
             result = -1;
-            if(img.getxmlDataLoadFlag() == false) img.preprocess();
             ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
             result = (this->*func)();
             return true;
         } else cout <<"wayIdx is error!" << endl;
     } else cout << "attrIdx is error!" << endl;
     return false;
-
 }
 
 string ATTRWAYS::getresult()
