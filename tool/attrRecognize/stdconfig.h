@@ -1,10 +1,8 @@
 #ifndef STDCONFIG_H
 #define STDCONFIG_H
 
-#include <iostream>
 #include <string>
 #include <vector>
-using namespace std;
 /**
  * @brief The STDCONFIG class
  * This class must consist with the GLOBALCONFIG.H
@@ -14,12 +12,12 @@ class STDCONFIG
     static STDCONFIG represant;
     //attrconfig:
     static int maxAlternative;
-    static vector<string> attrName;
-    static vector<string> labelAttrName;
-    static vector<vector<string> > attrValues;
+    static std::vector<std::string> attrName;
+    static std::vector<std::string> labelAttrName;
+    static std::vector<std::vector<std::string> > attrValues;
     //poseconfig:
-    static vector<string> poseName;
-    static vector<int> poseTypeIndex;
+    static std::vector<std::string> poseName;
+    static std::vector<int> poseTypeIndex;
     static bool _init;
     static bool init();
     STDCONFIG(){}
@@ -32,8 +30,8 @@ public:
     //const vector<string> getAllAttrs() const;
     int attrKind() const;
     int getAllKind() const;
-    //int getIndexByName(const string name) const;
-    string getAttrNameByIndex(int index) const;
+    int getIndexByName(const std::string name) const;
+    std::string getAttrNameByIndex(int index) const;
     //QStringList getAttrValuesByattrName(QString name) const;
     //QStringList getAttrValuesByIndex(int index) const;
     //int getIndexByAttrValue(int AttrIndex, const string value) const;
@@ -41,8 +39,8 @@ public:
 
     int getPoseCounter() const;
     //QStringList getPoseName() const;
-    int getPoseIndexByName(const string name) const;
-    string getPoseNameByIndex(int index) const;
+    int getPoseIndexByName(const std::string name) const;
+    std::string getPoseNameByIndex(int index) const;
     int getPTypeIdxByIdx(int index) const;
 };
 

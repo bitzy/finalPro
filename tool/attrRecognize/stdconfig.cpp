@@ -1,8 +1,9 @@
 #include "stdconfig.h"
+#include <iostream>
 #include <fstream>
 #include <cstring>
-#include <cstdio>
-#include <cstdlib>
+#include <cstdlib>//exit()
+using namespace std;
 
 STDCONFIG STDCONFIG::represant;
 
@@ -85,7 +86,6 @@ int STDCONFIG::getAllKind() const
     return attrName.size() + labelAttrName.size();
 }
 
-/*
 int STDCONFIG::getIndexByName(const string name) const
 {
     int size = attrKind();
@@ -98,7 +98,7 @@ int STDCONFIG::getIndexByName(const string name) const
             return i+size;
     }
     return -1;
-}*/
+}
 
 string STDCONFIG::getAttrNameByIndex(int index) const
 {

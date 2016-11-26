@@ -125,17 +125,17 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
         table2->setCellWidget(0, i, check);
 
         //functionlist:
-        /*
-        QComboBox *comboBox = new QComboBox;        
-        vector<string> stdlist = ATTRWAYS::instance()->getWays(attrNameTmp);
+        //show the function:
+        //usage of ATTRWAYS:
+        QComboBox *comboBox = new QComboBox;
+        std::vector<std::string> stdlist = ATTRWAYS::instance()->getWays(attrNameTmp.toStdString());
         QStringList tmplist;
         int size1 = (int)stdlist.size();
         for(int ii = 0; ii < size1; ii++)
             tmplist << QString::fromStdString(stdlist[ii]);
         comboBox->addItems(tmplist);
         if(tmplist.size() == 0) check->setEnabled(false);
-        table2->setCellWidget(1, i, comboBox);
-        */
+        table2->setCellWidget(1, i, comboBox);        
     }
     table2->setMinimumHeight(100);
     table2->setMaximumHeight(100);

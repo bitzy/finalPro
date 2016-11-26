@@ -10,8 +10,8 @@
 
 #include <QFile>
 #include <QString>
-#include <QPoint>
 #include <QStringList>
+//#include <QPoint>
 #include <QDebug>
 
 #endif // GLOBALHEADER_H

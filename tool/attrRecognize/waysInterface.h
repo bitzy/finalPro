@@ -1,17 +1,19 @@
 #ifndef WAYSINTERFACE_H
 #define WAYSINTERFACE_H
 
-#include <iostream>
 #include <string>
 #include <vector>
-#include "imgdata.h"
-using namespace std;
+#ifndef MYDEBUG
+#define MYDEBUG
+#endif
+
+class ImgData;
 
 class ATTRWAYS;
 typedef int(ATTRWAYS::*ATTR_FUNC)();
 class FUNCITEM {
 public:
-    string funcname;
+    std::string funcname;
     ATTR_FUNC funcaddr;
     FUNCITEM(const char* str, ATTR_FUNC func)
         :funcname(str), funcaddr(func) {}
@@ -23,8 +25,8 @@ public:
  */
 class ATTRWAYS {
     static ATTRWAYS represant;
-    static vector<string> funcAttrType;
-    static vector<vector<FUNCITEM> > attrWays;
+    static std::vector<std::string> funcAttrType;
+    static std::vector<std::vector<FUNCITEM> > attrWays;
     static bool _init;
     static bool init();
     ATTRWAYS(){}
@@ -42,17 +44,28 @@ public:
         return &represant;
     }
     //======================== outer ======================
-    vector<string> getWays(string name) const;
-    //recognize img's attribute i by way j;
-    bool recognize(ImgData& img, int attri, int wayj);
-    string getresult();
-    string getWaysDetail() const;
+    bool RECOGNIZE(ImgData *img, int attri, int wayj);
+    std::vector<std::string> getWays(std::string name) const;
+    std::string getresult();
+    std::string getWaysDetail() const;
 
+private:
     //======================== inner ======================
     //attribute's recognize ways;
-private:
     int sleeveBaseWay();
-    int textureWay1();
+    int textureWay1();    
+
+    //inner function:
+    double GetSleeveLenth(const ImgData* img);    
+    void GetClothColor(const ImgData* img,
+                       unsigned char &r,
+                       unsigned char &g,
+                       unsigned char &b);
+    void getColorMap();
+    void GetSkinnColor(const ImgData* img,
+                       unsigned char &r,
+                       unsigned char &g,
+                       unsigned char &b);
 };
 
 #endif // WAYSINTERFACE_H

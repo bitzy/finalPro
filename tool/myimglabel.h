@@ -2,12 +2,10 @@
 #define MYIMGLABEL_H
 
 #include <QLabel>
-#include <QPainter>
-#include <string>
-#include <vector>
-using namespace std;
-class ImgData;
 
+class ImgData;
+class QPainter;
+class QPen;
 /**
  * @brief The GLOBALTESTPOSE class
  * build relationship with "0pose.config" file.
@@ -40,8 +38,8 @@ class MyImgLabel : public QLabel
     Q_OBJECT
 private:
     enum FLAG_SHAPE {POINT=0, LINE, RECT};
-    QPainter painter;
-    QPen pen;
+    QPainter* painter;
+    QPen* pen;
     void setMyPen(int width = 3, QColor color = Qt::red);
 
     QImage image;
@@ -60,7 +58,6 @@ private:
     ImgData* imgData;
     //bool _loadxmlData(ImgData& data);
     QString _int2color(int v) const;
-    vector<string> QString2StdVec(const QStringList&);
     void labelRefreshPoseData(); //show pose data on label;
 
 public:

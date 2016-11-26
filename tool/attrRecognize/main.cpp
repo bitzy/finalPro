@@ -23,9 +23,9 @@ int main()
     printf("xmlpath = %s\n", xmlpath.c_str());
 
     printf("\n\nload xml data...");
-    ImgData imgdata;
-    imgdata.setIMGpath(imgpath, xmlpath);
-    if(loadxml2imgdata(xmlpath, imgdata)) {
+    ImgData img;
+    img.setIMGpath(imgpath, xmlpath);
+    if(loadxml2imgdata(xmlpath, img)) {
         printf("==> data load succeed!\n");
     }
 
@@ -40,7 +40,7 @@ int main()
             int waysidx;
             cin >> attridx >> waysidx;
             printf("\n\nrecognizing image by%d %d...", attridx, waysidx);
-            bool ret = ATTRWAYS::instance()->recognize(imgdata, attridx, waysidx);
+            bool ret = ATTRWAYS::instance()->RECOGNIZE(&img, attridx, waysidx);
             if(ret) {
                 printf("==> recognize finished!\n");
                 cout << ATTRWAYS::instance()->getresult() << endl;

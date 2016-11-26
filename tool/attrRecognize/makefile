@@ -2,13 +2,13 @@
 
 
 # annotation
-DEBUG 		= false
+Release 	=  1
 TARGET_PROG	:= main
 
 #projet directory
 DEBUG_DIR	:= ./Debug
 RELEASE_DIR	:= ./Release
-BIN_DIR		:= $(if $(DEBUG), $(RELEASE_DIR), $(DEBUG_DIR))
+BIN_DIR		:= $(if $(Release), $(RELEASE_DIR), $(DEBUG_DIR))
 
 #shell command
 CC		:= gcc
@@ -69,7 +69,7 @@ endef
 $(BIN_DIR)/%.o: %.c
 	@$(call make-depend,$(patsubst %.o,%.d,$@),$<,$@,$(CC))
 	$(CC) $(CFLAGS) -o $@ -c $<
-
+	
 $(BIN_DIR)/%.o: %.cpp
 	@$(call make-depend,$(patsubst %.o,%.d,$@),$<,$@,$(CXX))
 	$(CXX) $(CXXFLAGS) -o $@ -c $<
@@ -84,10 +84,14 @@ endef
 #call add-target
 $(foreach targ,$(TARGET_PROG),$(eval $(call add-target,$(targ),$(objs),$(CXX))))
 
-all:
-	export $(PKD_CONFIG_PATH)
-	export $(LD_LIBRARY_PATH) 
-	$(REAL_TARGET) $(TARGET_LIBS)	
+print:
+	@echo system PKG_CONFIG_PATH=$(shell echo $$PKG_CONFIG_PATH)
+	@echo make PKG_CONFIG_PATH=$(PKG_CONFIG_PATH)
+	@echo system LD_LIBRARY_PATH=$(shell echo $$LD_LIBRARY_PATH)
+	@echo make LD_LIBRARY_PATH=$(LD_LIBRARY_PATH)
+
+
+all:$(REAL_TARGET) $(TARGET_LIBS)	
 
 clean:
 	$(RM) $(BIN_DIR)

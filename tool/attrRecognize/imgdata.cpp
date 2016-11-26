@@ -1,9 +1,14 @@
 #include "imgdata.h"
-#include "mytool.h"
-#include <opencv2/opencv.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-//using namespace cv;
+
+#include <iostream>
+using namespace std;
+#include <opencv2/highgui/highgui.hpp> //imread
+
+//#define IMGDATADEBUG
+#ifdef IMGDATADEBUG
+    #include <opencv2/core/core.hpp>
+    using namespace cv;
+#endif
 
 //=================== POSE NAME =============
 #define PH  "head"
@@ -115,7 +120,7 @@ void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) 
 
 
 void ImgData::_loadManDotstd()
-{
+{    
     vector<cv::Point2i> manDotstd;
     int size = (int)poseDatas.size();
     for(int i = 0; i < size; i++) {
@@ -124,6 +129,7 @@ void ImgData::_loadManDotstd()
         manDotstd.push_back(cv::Point2i(x, y));
     }
 
+    //from stdconfig get posename corresponding index;
     head = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PH)];
     neck = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PN)];
     lshoud = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PLS)];
@@ -196,7 +202,7 @@ cv::Rect ImgData::__getBoundingBox()
         }
     }
 
-    int marginVertical = (bottom - top) / 5;
+    int marginVertical = (bottom - top) / 8;
     int marginHorinzol = (right - left) / 5;
     int imgwidth = src_ori.cols - 1;
     int imgheight = src_ori.rows - 1;
@@ -211,24 +217,60 @@ cv::Rect ImgData::__getBoundingBox()
     outBottom = (outBottom > imgheight?imgheight:outBottom);
 
     cv::Rect res(cv::Point(outLeft, outTop), cv::Point(outRight, outBottom));
+#ifdef IMGDATADEBUG
+    cout << outLeft << "," << outTop << ","
+         << outRight << "," << outBottom << endl;
+    cv::rectangle(src_ori, res, cv::Scalar(255,0,0));
+    imwrite("rect.jpg", src_ori);
+#endif
     return res;
 }
 
 
 void ImgData::_resizeSrcToFixedHeight(const cv::Rect &rect, int height)
-{    
+{
+#ifdef IMGDATADEBUG
+    cout << "img_ori's size" << src_ori.cols << "x"
+            << src_ori.rows << endl;
+#endif
     xoffset = rect.x;
     yoffset = rect.y;
     cv::Mat focusImgROI = src_ori(rect);
     scale = 1.0*height/focusImgROI.rows;
-    resize(src_ori, src, cv::Size(), scale, scale);
+    resize(focusImgROI, src, cv::Size(), scale, scale);
 
     //resize Point
     _resizePosePoints();
+#ifdef IMGDATADEBUG
+    cout << "src's size" << src.cols << "x"
+            << src.rows << endl;
+    line(src, lshoud, lelbow, Scalar(0,255,0));
+    imwrite("scaleimg.jpg", src);
+#endif
 }
 
 cv::Vec3b ImgData::_getPixelColor(const cv::Point &p) const
 {
     cv::Vec3b color = src_ori.at<cv::Vec3b>(p.y, p.x);
     return color;
+}
+
+int ImgData::fminvalue6(int x, int y, int z1, int z2, int z3, int z4)
+{
+    int res = (min)(x,y);
+    res = (min)(res, z1);
+    res = (min)(res, z2);
+    res = (min)(res, z3);
+    res = (min)(res, z4);
+    return res;
+}
+
+int ImgData::fmaxvalue6(int x, int y, int z1, int z2, int z3, int z4)
+{
+    int res = (max)(x,y);
+    res = (max)(res, z1);
+    res = (max)(res, z2);
+    res = (max)(res, z3);
+    res = (max)(res, z4);
+    return res;
 }

@@ -233,16 +233,16 @@ QTableWidget *FlagForm::UIcreateAttrTable()
         attrTable->setCellWidget(i, 0, combo);
 
         //way & test:
-        /*
+        //usage: each image provide test attrways
         QComboBox *wayComboBox = new QComboBox;
-        vector<string> tmplist = ATTRWAYS::instance()->getWays(attrName.toStdString());
+        QStringList tmplist = GLOBALFUNC::inst()->stdvec2qvec(
+                    ATTRWAYS::instance()->getWays(attrName.toStdString()));
         int size1 = tmplist.size();
         for(int j = 0; j < size1; j++) {
-            wayComboBox->addItem(QString::fromStdString(tmplist[j]));
+            wayComboBox->addItem(tmplist[j]);
             attrTable->setCellWidget(i, 1, wayComboBox);
             attrTable->setCellWidget(i, 2, UIcreateBtn(tr("test"), SLOT(testAttr())));
         }
-        */
     }
     attrTable->setMinimumWidth(400);
     attrTable->setMaximumWidth(400);

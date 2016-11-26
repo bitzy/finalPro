@@ -7,11 +7,11 @@
 #include <QDomDocument>
 #include <QMouseEvent>
 #include <QTime>
-#include <QDebug>
+#include <QPainter>
 
 //myimglabel <==> imgdata
 #include "attrRecognize/imgdata.h"
-//#include "attrRecognize/waysInterface.h"
+//using namespace std;
 
 GLOBALTESTPOSE GLOBALTESTPOSE::represant;
 QStringList GLOBALTESTPOSE::testname;
@@ -92,9 +92,9 @@ QString MyImgLabel::getColor(const QPoint &pos) const
 
 void MyImgLabel::setMyPen(int width, QColor color)
 {
-    pen.setWidth(width);
-    pen.setColor(color);
-    painter.setPen(pen);
+    pen->setWidth(width);
+    pen->setColor(color);
+    painter->setPen(*pen);
 }
 
 void MyImgLabel::initialDrawingStatus()
@@ -111,19 +111,11 @@ QString MyImgLabel::_int2color(int v) const
     return res;
 }
 
-vector<string> MyImgLabel::QString2StdVec(const QStringList & t)
-{
-    vector<string> res;
-    int size = t.size();
-    for(int i = 0; i < size; i++) {
-        res.push_back(t[i].toStdString());
-    }
-    return res;
-}
-
 MyImgLabel::MyImgLabel()
 {
     imgData = new ImgData;
+    painter = new QPainter;
+    pen = new QPen;
 }
 
 /**
@@ -182,8 +174,11 @@ void MyImgLabel::labelLoadDataByData(
         const QStringList &pose,
         const QStringList &attr)
 {
-    imgData->setPoseDatas(QString2StdVec(pose));
-    imgData->setAttrDatas(QString2StdVec(attr));
+    qDebug() << "myimgLabel pase data to imgData:" << endl;
+    qDebug() << pose << endl;
+    qDebug() << attr << endl;
+    imgData->setPoseDatas(GLOBALFUNC::inst()->qvec2stdvec(pose));
+    imgData->setAttrDatas(GLOBALFUNC::inst()->qvec2stdvec(attr));
     imgData->setXmlDataLoadFlag(true);
 
     initialDrawingStatus();
@@ -197,7 +192,7 @@ void MyImgLabel::labelLoadDataByData(
  */
 void MyImgLabel::labelRefreshPoseData()
 {    
-    painter.begin(&showImage);
+    painter->begin(&showImage);
     setMyPen();
 
     //get data:
@@ -221,11 +216,11 @@ void MyImgLabel::labelRefreshPoseData()
     for(int i = 0; i < size; i++) {
         if(dots[i].x() == -1) continue;
         int dotPreIdx = GLOBALTESTPOSE::inst()->getTestpreIdx(i);
-        if(dotPreIdx == -1) painter.drawPoint(dots[i].x(), dots[i].y());
-        else painter.drawLine(dots[i], dots[dotPreIdx]);
+        if(dotPreIdx == -1) painter->drawPoint(dots[i].x(), dots[i].y());
+        else painter->drawLine(dots[i], dots[dotPreIdx]);
     }
     showImageCopy = showImage;
-    painter.end();
+    painter->end();
     update();
 }
 
@@ -236,7 +231,8 @@ const QString MyImgLabel::labelTest(int attri, int wayj)
     QTime testTime;
     testTime.start();
     bool ret = false;
-    //ret = ATTRWAYS::instance()->recognize(imgData, attri, wayj);
+    //usage: provide attrways test;
+    ret = ATTRWAYS::instance()->RECOGNIZE(imgData, attri, wayj);
 
     if(ret) res = QString("Succeed. \nCost Time: %1 s.").arg(testTime.elapsed()/1000.0);
     else res = QString("Error!");
@@ -246,20 +242,14 @@ const QString MyImgLabel::labelTest(int attri, int wayj)
 const QStringList MyImgLabel::labelDataGetPoseDatas() const
 {
     QStringList res;
-    vector<string> tmp = imgData->getPoseDatas();
-    int size = tmp.size();
-    for(int i = 0; i < size; i++)
-        res << QString::fromStdString(tmp[i]);
+    res = GLOBALFUNC::inst()->stdvec2qvec(imgData->getPoseDatas());
     return res;
 }
 
 const QStringList MyImgLabel::labelDataGetAttrDatas() const
 {
     QStringList res;
-    vector<string> tmp = imgData->getAttrDatas();
-    int size = tmp.size();
-    for(int i = 0; i < size; i++)
-        res << QString::fromStdString(tmp[i]);
+    res = GLOBALFUNC::inst()->stdvec2qvec(imgData->getAttrDatas());
     return res;
 }
 
@@ -372,11 +362,11 @@ void MyImgLabel::mouseMoveEvent(QMouseEvent *event)
         if(drawShape == FLAG_SHAPE::LINE || drawShape == FLAG_SHAPE::RECT) {
             showImage = showImageCopy;
 
-            painter.begin(&showImage);
+            painter->begin(&showImage);
             setMyPen(3, drawColor);
-            if(drawShape == LINE) painter.drawLine(curSPoint, event->pos());
-            else  painter.drawRect(QRect(curSPoint, event->pos()));
-            painter.end();
+            if(drawShape == LINE) painter->drawLine(curSPoint, event->pos());
+            else  painter->drawRect(QRect(curSPoint, event->pos()));
+            painter->end();
             update();
         }
     }
@@ -385,22 +375,22 @@ void MyImgLabel::mouseMoveEvent(QMouseEvent *event)
 void MyImgLabel::mouseReleaseEvent(QMouseEvent *event)
 {
     if(drawAllow) {
-        painter.begin(&showImageCopy);
+        painter->begin(&showImageCopy);
         setMyPen(3, drawColor);
 
         labelData.clear();
         if(drawShape == POINT) {
-            painter.drawEllipse(curSPoint, 3, 3);
+            painter->drawEllipse(curSPoint, 3, 3);
             labelData << curSPoint;
         } else if(drawShape == LINE){
-            painter.drawLine(curSPoint, event->pos());
+            painter->drawLine(curSPoint, event->pos());
             labelData << curSPoint << event->pos();
         } else if(drawShape == RECT) {
-            painter.drawRect(QRect(curSPoint, event->pos()));
+            painter->drawRect(QRect(curSPoint, event->pos()));
             labelData << curSPoint << event->pos();
         }
         showImage = showImageCopy;
-        painter.end();
+        painter->end();
         update();
 
         emit dataGetOk(labelData);

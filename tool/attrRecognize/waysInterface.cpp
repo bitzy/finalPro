@@ -1,6 +1,9 @@
 #include "waysInterface.h"
 #include <fstream>
-#include <cstdio>
+#include <iostream>
+#include <sstream>
+#include <cstdlib> //exit();
+using namespace std;
 
 vector<string> ATTRWAYS::funcAttrType;
 vector<vector<FUNCITEM> > ATTRWAYS::attrWays;
@@ -74,11 +77,11 @@ vector<string> ATTRWAYS::getWays(string name) const
  * @param wayj
  * @return
  */
-bool ATTRWAYS::recognize(ImgData &img, int attri, int wayj)
+bool ATTRWAYS::RECOGNIZE(ImgData *img, int attri, int wayj)
 {    
     if(_between(attri, 0, attrWays.size())) {
         if(_between(wayj, 0, attrWays[attri].size())) {
-            imgTarget = &img;
+            imgTarget = img;
             attrIdx = attri;
             waysIdx = wayj;
             result = -1;

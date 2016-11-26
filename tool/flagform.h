@@ -2,7 +2,7 @@
 #define FLAGFORM_H
 
 #include <QDialog>
-#include <QDir>
+#include <QFileInfoList>
 
 QT_BEGIN_NAMESPACE
 class QLabel;

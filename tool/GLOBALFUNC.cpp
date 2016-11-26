@@ -1,4 +1,6 @@
 #include "GLOBALFUNC.h"
+#include <QPoint>
+using namespace std;
 
 GLOBALFUNC GLOBALFUNC::represant;
 
@@ -27,6 +29,26 @@ bool GLOBALFUNC::confirmDirExist(const QString &fpath) {
     }
 #endif
     return true;
+}
+
+QStringList GLOBALFUNC::stdvec2qvec(const vector<string>& v)
+{
+    QStringList res;
+    int size = v.size();
+    for(int i = 0; i < size; i++) {
+        res.push_back(QString::fromStdString(v[i]));
+    }
+    return res;
+}
+
+vector<string> GLOBALFUNC::qvec2stdvec(const QStringList &v)
+{
+    vector<string> res;
+    int size = v.size();
+    for(int i = 0; i < size; i++) {
+        res.push_back(v[i].toStdString());
+    }
+    return res;
 }
 
 QString &GLOBALFUNC::pathSlashAdd(QString &fpath)
