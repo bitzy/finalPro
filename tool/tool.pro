@@ -29,7 +29,8 @@ SOURCES += main.cpp\
     attrRecognize/superpixeltool.cpp \
     attrRecognize/planimetry_tools.cpp \
     attrRecognize/skinDetect.cpp \
-    attrRecognize/clothColor.cpp
+    attrRecognize/clothColor.cpp \
+    attrRecognize/colorkmeans.cpp
 
 HEADERS  += mainwindow.h \
     GLOBALDEFINE.h \
@@ -42,7 +43,8 @@ HEADERS  += mainwindow.h \
     attrRecognize/stdconfig.h \
     attrRecognize/imgdata.h \
     attrRecognize/superpixeltool.h \
-    attrRecognize/planimetry_tools.h
+    attrRecognize/planimetry_tools.h \
+    attrRecognize/colorkmeans.h
 
 FORMS    += mainwindow.ui
 

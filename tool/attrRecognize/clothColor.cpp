@@ -3,6 +3,7 @@
 #include <iostream>
 #include <iomanip> //cout
 #include <cstdio> //printf
+#include "colorkmeans.h"
 using namespace std;
 
 #include "planimetry_tools.h" //base tool
@@ -45,22 +46,33 @@ void ATTRWAYS::GetClothColor(
     Rect area2 = Rect(img->neck + offset2, Size(width2, hight2));
     focusROI[1] = img->src(area2);
 
+    //int width = (width1 < width2? width1 : width2);
+    //int hight = (hight1 < hight2? hight1 : hight2);
 
     //extract color feature:
-    const int BINNUM = int(pow(2.0, 15.0));
-    HistoGram1D histtool(BINNUM, 0, 0x7fff);
-    for(int i = 0; i < FOCUS_TARGET_NUM; i++) {
-        vector<Mat> mv;
-        focusROI[i].convertTo(focusROI[i], CV_16UC3);
-        split(focusROI[i], mv); //0- B; 1- G; 2-R;
+    //    const int BINNUM = int(pow(2.0, 15.0));
+    //    HistoGram1D histtool(BINNUM, 0, 0x7fff);
+    //    for(int i = 0; i < FOCUS_TARGET_NUM; i++) {
+    //        vector<Mat> mv;
+    //        focusROI[i].convertTo(focusROI[i], CV_16UC3);
+    //        split(focusROI[i], mv); //0- B; 1- G; 2-R;
 
-        Mat mData(mv[0].size(), CV_16U);
-        mData = (mv[2]&0xf8)*128 + (mv[1]&0xf8)*4 + (mv[0]&0xf8)/8;
-        MatND hist = histtool.getHistogram1D(mData);
-    }
+    //        Mat mData(mv[0].size(), CV_16U);
+    //        mData = (mv[2]&0xf8)*128 + (mv[1]&0xf8)*4 + (mv[0]&0xf8)/8;
+    //        MatND hist = histtool.getHistogram1D(mData);
+    //    }
 
-    //dealwith hist:
-    //
+    //kmeans extract main color:
+    ColorKmeansTool imgColor(focusROI[0]);
+    imgColor.color(5, [](Cluster colors){
+        for_each(colors.cbegin(), colors.cend(), [](const TheColor& color){
+            cout << "("
+                 << color[0] << ","
+                 << color[1] << ","
+                 << color[2] << ")"
+                 <<endl;
+        });
+    });
 }
 
 void ATTRWAYS::getColorMap()
