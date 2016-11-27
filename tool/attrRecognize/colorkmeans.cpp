@@ -6,7 +6,6 @@ using namespace std;
 
 Cluster ColorKmeansTool::kmeans(const std::vector<ColorWithCount> &pixels, unsigned int k, double min_diff)
 noexcept {    
-
     Cluster clusters;
     unsigned int randmax = static_cast<unsigned int>(pixels.size());
 
