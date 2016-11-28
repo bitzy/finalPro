@@ -5,6 +5,9 @@
 #include <cassert>
 #include <functional>
 #include <map>
+#include <opencv2/opencv.hpp>
+
+/*
 class colorTwister {
 private:
     unsigned int state[624];
@@ -87,33 +90,43 @@ public:
     //static const TheColor RGB2HSV(const TheColor& color) noexcept;
     //static const TheColor HSV2RGB(const TheColor& color) noexcept;
 };
-
+*/
 class ColorKmeansTool;
 namespace cv { class Mat; }
-enum ColorSpaceRGB {Red, Green, Blue};
-using ColorWithCount = std::pair<TheColor, unsigned int>;
-using Cluster = std::vector<TheColor>;
-using ClusteredPoint = std::map<unsigned int, std::vector<ColorWithCount>>;
-using ColorKmeansCallback = std::function<void(const Cluster& colors)>;
+//enum ColorSpaceRGB {Red, Green, Blue};
+using ColorWithCount = std::pair<int, unsigned int>;
+//using Cluster = std::vector<TheColor>;
+//using ClusteredPoint = std::map<unsigned int, std::vector<ColorWithCount>>;
+using ColorFeatPer = std::pair<cv::Vec3b, double>;
+using ColorFeats = std::vector<ColorFeatPer>;
+using ColorKmeansCallback = std::function<void(const cv::Mat& colors)>;
 
 class ColorKmeansTool
 {
     cv::Mat& image;
-    Cluster kmeans(const std::vector<ColorWithCount>& getPixels,
-                   unsigned int k, double min_diff = 1.0) noexcept;
+    //    Cluster kmeans(const std::vector<ColorWithCount>& getPixels,
+    //                   unsigned int k, double min_diff = 1.0) noexcept;
+    //cv::Mat kmeans(const cv::Mat& samples, unsigned int k) noexcept;
     //inner tools:
-    static void resize(const cv::Mat&src, cv::Mat&dest, int wlimit, int hlimit, int interpolation) noexcept;
-    static std::vector<ColorWithCount> getPixels(cv::Mat& img) noexcept;
-    static TheColor center(const std::vector<ColorWithCount>& colors) noexcept;
+    static cv::Mat resize(const cv::Mat&src, int wlimit, int hlimit, int interpolation) noexcept;
+    struct CmpByValue {
+        bool operator() (const ColorWithCount& lhs, const ColorWithCount& rhs) {
+            return lhs.second > rhs.second;
+        }
+    };
+
+    //static std::vector<ColorWithCount> getPixels(cv::Mat& img) noexcept;
+    //static TheColor center(const std::vector<ColorWithCount>& colors) noexcept;
 public:
     ColorKmeansTool(cv::Mat& img) noexcept;
-    void color(unsigned int number, ColorKmeansCallback callback, int convertColor=-1) noexcept;
+    //void getMainColor(unsigned int number, ColorKmeansCallback callback, int convertColor=-1) noexcept;
+    ColorFeats getMainColor(unsigned int number, int convertColor = -1) noexcept;
     // c++ 14
     //    template<typename E>
     //    static constexpr auto toType(E enumerator) noexcept {
     //        return static_cast<std::underlying_type<E>>(enumerator);
     //    }
-    /* get std::tuple element quickly.*/
+    /*get std::tuple element quickly.*/
     template<typename E>
     constexpr typename std::underlying_type<E>::type
     toUType(E enumerator) noexcept {

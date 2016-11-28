@@ -1,11 +1,11 @@
 #include "colorkmeans.h"
-#include <opencv2/opencv.hpp>
 using namespace cv;
 using namespace std;
+#include "planimetry_tools.h"
 
-
+/*
 Cluster ColorKmeansTool::kmeans(const std::vector<ColorWithCount> &pixels, unsigned int k, double min_diff)
-noexcept {    
+noexcept {
     Cluster clusters;
     unsigned int randmax = static_cast<unsigned int>(pixels.size());
 
@@ -49,35 +49,97 @@ noexcept {
 
     return clusters;
 }
+*/
 
-ColorKmeansTool::ColorKmeansTool(Mat &_img) noexcept : image(_img) {}
+/*
+Mat ColorKmeansTool::kmeans(const Mat &samples, unsigned int k)
+noexcept {
+    Mat labels;
+    Mat centers(k, 1, samples.type());
+    cout << "sample:" << samples.rows << endl;
+    cout << "each sample has " << samples.cols << endl;
+    cout << "sample type" << samples.type() << endl;
+    cv::kmeans(samples, k, labels, TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 10, 1.0), 3, KMEANS_PP_CENTERS, centers);
+    return centers;
+}*/
 
-void ColorKmeansTool::color(unsigned int number, ColorKmeansCallback callback, int convertColor)
+
+ColorKmeansTool::ColorKmeansTool(Mat &_img)noexcept : image(_img) {}
+
+/*
+void ColorKmeansTool::getMainColor(unsigned int number, ColorKmeansCallback callback, int convertColor)
+noexcept {
+    Mat centers = this->getMainColor(number, convertColor);
+    callback(centers);
+}*/
+
+ColorFeats ColorKmeansTool::getMainColor(unsigned int number, int convertColor)
 noexcept {
     //convertColor = -1:no convert color space;
-    Mat smallerImage;
-    ColorKmeansTool::resize(image, smallerImage, 200, 200, CV_INTER_LINEAR);
+    Mat smallerImage = ColorKmeansTool::resize(image, 200, 200, CV_INTER_LINEAR);
     //imwrite("result.jpg", smallerImage);
 
     //color space & pixels;
     if (convertColor != -1) cvtColor(smallerImage, smallerImage, convertColor);
-    vector<ColorWithCount> pixels = ColorKmeansTool::getPixels(smallerImage);
+    //vector<ColorWithCount> pixels = ColorKmeansTool::getPixels(smallerImage);
 
+    //Mat clusters = this->kmeans(smallerImage, number); //this->kmeans(pixels, number, 3000);
     //kmeans result:
-    Cluster clusters = this->kmeans(pixels, number, 3000);
-    callback(clusters);
+    int samplesNum =  smallerImage.rows * smallerImage.cols;
+    Mat labels;
+    Mat samples = smallerImage.reshape(0, samplesNum);
+    samples.convertTo(samples, CV_32F);
+    Mat centers(number, 3, CV_32F);
+    kmeans(samples, number, labels, TermCriteria(CV_TERMCRIT_EPS+CV_TERMCRIT_ITER, 10, 1.0), 3, KMEANS_PP_CENTERS, centers);
+    centers = centers.reshape(centers.cols, centers.rows);
+    centers.convertTo(centers, CV_8UC3);
+
+    //statistic the labels amount:
+    map<int, int> count;//map:<labelIdx, count>
+    for(int i = 0; i < samplesNum; i++) {
+        int labelIdx = labels.ptr<int>(i)[0];
+        count[labelIdx]++;
+    }
+    vector<ColorWithCount> colorCountVec(count.begin(), count.end());
+    sort(colorCountVec.begin(), colorCountVec.end(), CmpByValue());
+    //    Mat colorSort(number, 1, CV_8UC3);
+    //    for(int i = 0; i < number; i++) {
+    //        int idx = colorCountVec[i].first;
+    //        //cout << colorCountVec[i].second << endl;
+    //        Vec3b* ptr = colorSort.ptr<Vec3b>(i);
+    //        Vec3b* rptr = centers.ptr<Vec3b>(idx);
+    //        ptr[0][0] = rptr[0].val[0];
+    //        ptr[0][1] = rptr[0].val[1];
+    //        ptr[0][2] = rptr[0].val[2];
+    //    }
+    //outColors2IMG(colortmp, "colortmpsort.jpg");
+    vector<ColorFeatPer> res;
+    res.reserve(number);
+    for_each(colorCountVec.begin(), colorCountVec.end(),
+             [&res, &centers, &samplesNum](const pair<int, unsigned int>& pair){
+        int labelIdx = pair.first;
+        Vec3b* ptr = centers.ptr<Vec3b>(labelIdx);
+        Vec3b colorValue = ptr[0];
+        res.emplace_back(ColorFeatPer(colorValue, pair.second/double(samplesNum)));
+    });
+    //cout << image.type() << endl;
+    //cout << "centers:" << centers.rows << ";" << centers.cols << ";" << centers.type() << endl;
+    return res;
 }
 
-void ColorKmeansTool::resize(const Mat &src, Mat &dest, int wlimit, int hlimit, int interpolation)
+Mat ColorKmeansTool::resize(const Mat &src, int wlimit, int hlimit, int interpolation)
 noexcept {
     int width  = src.cols;
     int height = src.rows;
     double ratio;
     if (height >= width) ratio = hlimit / double(height);
     else ratio = wlimit / double(width);
+    Mat dest;
     cv::resize(src, dest, Size(), ratio, ratio, interpolation);
+    return dest;
 }
 
+/*
 std::vector<ColorWithCount> ColorKmeansTool::getPixels(Mat &img)
 noexcept {
     //get img's pixels count
@@ -105,7 +167,7 @@ noexcept {
              //function do:
              [&pixels](const pair<TheColor, unsigned int>& pair) {
         pixels.emplace_back(ColorWithCount(pair.first, pair.second));}
-    );    
+    );
     return pixels;
 }
 
@@ -154,7 +216,7 @@ double TheColor::euclidean(const TheColor &color)
 noexcept {
     return TheColor::euclidean(*this, color);
 }
-
+*/
 /*
 const TheColor TheColor::RGB2HSV(const TheColor &color)
 noexcept {

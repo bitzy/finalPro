@@ -57,10 +57,7 @@ private:
 
     //inner function:
     double GetSleeveLenth(const ImgData* img);    
-    void GetClothColor(const ImgData* img,
-                       unsigned char &r,
-                       unsigned char &g,
-                       unsigned char &b);
+    void GetClothColor(const ImgData* img);
     void getColorMap();
     void GetSkinnColor(const ImgData* img,
                        unsigned char &r,

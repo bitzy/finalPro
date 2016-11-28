@@ -1,6 +1,8 @@
 #include "planimetry_tools.h"
 #define EOPS (1E-10)
 using namespace cv;
+#define DEBUG
+#define DEBUG_OUTPUT_FILE "../TMP_OUTPUT/"
 
 double getEucliDist(double p1x, double p1y, double p2x, double p2y) {
     return sqrt((p1x - p2x) * (p1x - p2x) +
@@ -101,4 +103,31 @@ Mat HistoGram1D::getHistogramImage(const Mat &img)
                 Scalar::all(0));
     }
     return histImg;
+}
+
+
+void outColors2IMG(const Mat &colors, const char *name)
+{
+#ifdef DEBUG
+    assert(colors.channels() == 3);
+    int row = colors.rows;
+    int col = colors.cols;
+
+    Mat outImg(row*10, col*10, CV_8UC3);
+    for(int i = 0, rowptr = 0; i < row; i++, rowptr+= 10) {
+        const Vec3b* ptr = colors.ptr<Vec3b>(i);
+        for(int j = 0, colptr = 0; j < col; j++, colptr+=10) {
+            rectangle(outImg, Rect(colptr, rowptr, 10, 10),
+                      Scalar(ptr[j][0], ptr[j][1], ptr[j][2]), -1);
+        }
+    }
+    std::string fpath = DEBUG_OUTPUT_FILE;
+    fpath += name;
+    imwrite(name, outImg);
+#endif
+
+//    for(int i = 0; i < colors.rows; i++) {
+//        const Vec3b* ptr = colors.ptr<Vec3b>(i);
+//        std::cout << int(ptr[0][0]) << ";" << int(ptr[0][1]) << ";" << int(ptr[0][2]) << std::endl;
+//    }
 }

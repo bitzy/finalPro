@@ -19,11 +19,7 @@ void printmat(const Mat& m, int a, int b) {
     printf("\n");
 }
 
-void ATTRWAYS::GetClothColor(
-        const ImgData *img,
-        unsigned char& r,
-        unsigned char& g,
-        unsigned char& b)
+void ATTRWAYS::GetClothColor(const ImgData *img)
 {
     r = g = b = 0;
     const int FOCUS_TARGET_NUM = 2;
@@ -63,16 +59,9 @@ void ATTRWAYS::GetClothColor(
     //    }
 
     //kmeans extract main color:
-    ColorKmeansTool imgColor(focusROI[0]);
-    imgColor.color(5, [](Cluster colors){
-        for_each(colors.cbegin(), colors.cend(), [](const TheColor& color){
-            cout << "("
-                 << color[0] << ","
-                 << color[1] << ","
-                 << color[2] << ")"
-                 <<endl;
-        });
-    });
+    ColorKmeansTool imgColor(focusROI[1]);
+    ColorFeats cfeat = imgColor.getMainColor(5);
+    //outColors2IMG(colors, "output.jpg");
 }
 
 void ATTRWAYS::getColorMap()

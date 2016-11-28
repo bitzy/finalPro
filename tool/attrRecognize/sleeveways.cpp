@@ -7,7 +7,7 @@ using namespace std;
 #include "superpixeltool.h"   //superpixels
 using namespace cv;//imgData #include <imgproc.hpp>
 
-#define SUPERPIXELSSWITCH
+//#define SUPERPIXELSSWITCH
 #undef MYDEBUG
 
 int posSimple(const Point& A, const Point& B, const Point& C, vector<Point>& points)

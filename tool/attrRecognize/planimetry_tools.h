@@ -29,6 +29,7 @@ public:
     cv::Mat getHistogramImage(const cv::Mat& img);
 };
 
+void outColors2IMG(const cv::Mat &colors, const char* name);
 
 #endif // PLANIMETRY_TOOLS_H
 
