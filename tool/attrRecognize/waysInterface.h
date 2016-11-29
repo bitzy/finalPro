@@ -38,7 +38,7 @@ class ATTRWAYS {
     ImgData* imgTarget;
     int attrIdx;    //recognize the attrIdx attribute;
     int waysIdx;    //recognize by the way of waysIdx;
-    int result;     //recognize result    
+    int result;     //recognize result
 public:
     static ATTRWAYS* instance() {
         return &represant;
@@ -53,16 +53,13 @@ private:
     //======================== inner ======================
     //attribute's recognize ways;
     int sleeveBaseWay();
-    int textureWay1();    
+    int textureWay1();
 
     //inner function:
-    double GetSleeveLenth(const ImgData* img);    
-    void GetClothColor(const ImgData* img);
-    void getColorMap();
-    void GetSkinnColor(const ImgData* img,
-                       unsigned char &r,
-                       unsigned char &g,
-                       unsigned char &b);
+    double GetSleeveLenth(const ImgData* img);
+    void   GetClothColor (const ImgData* img, int rgb[][3], double* percent, int num=5);
+    void   GetSkinnColor (const ImgData* img, int rgb[3]);
+    void   helperGetColorMap();
 };
 
 #endif // WAYSINTERFACE_H

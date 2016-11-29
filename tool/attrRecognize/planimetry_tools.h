@@ -30,6 +30,8 @@ public:
 };
 
 void outColors2IMG(const cv::Mat &colors, const char* name);
+cv::Mat combineMatSample(const cv::Mat& a, const cv::Mat& b);
+cv::Mat getFaceSkinP(const cv::Mat& img);
 
 #endif // PLANIMETRY_TOOLS_H
 

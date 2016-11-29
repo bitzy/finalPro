@@ -2,7 +2,7 @@
 #define COLORKMEANS_H
 
 #include <vector>
-#include <cassert>
+//#include <cassert>
 #include <functional>
 #include <map>
 #include <opencv2/opencv.hpp>
@@ -99,28 +99,35 @@ using ColorWithCount = std::pair<int, unsigned int>;
 //using ClusteredPoint = std::map<unsigned int, std::vector<ColorWithCount>>;
 using ColorFeatPer = std::pair<cv::Vec3b, double>;
 using ColorFeats = std::vector<ColorFeatPer>;
-using ColorKmeansCallback = std::function<void(const cv::Mat& colors)>;
+//using ColorKmeansCallback = std::function<void(const cv::Mat& colors)>;
 
 class ColorKmeansTool
 {
-    cv::Mat& image;
+    cv::Mat& sampleData;
+    int partition_threshhold;
     //    Cluster kmeans(const std::vector<ColorWithCount>& getPixels,
     //                   unsigned int k, double min_diff = 1.0) noexcept;
     //cv::Mat kmeans(const cv::Mat& samples, unsigned int k) noexcept;
     //inner tools:
-    static cv::Mat resize(const cv::Mat&src, int wlimit, int hlimit, int interpolation) noexcept;
+    //static cv::Mat resize(const cv::Mat&src, int wlimit, int hlimit, int interpolation) noexcept;
     struct CmpByValue {
         bool operator() (const ColorWithCount& lhs, const ColorWithCount& rhs) {
             return lhs.second > rhs.second;
         }
     };
+    bool equivalence(const cv::Vec3f& a, const cv::Vec3f& b) {
+        //h:0-180; s:0-255; v: 0-255;
+        return true;
+    }
 
+    static cv::Mat getOPData(cv::Mat& img) noexcept;
     //static std::vector<ColorWithCount> getPixels(cv::Mat& img) noexcept;
     //static TheColor center(const std::vector<ColorWithCount>& colors) noexcept;
 public:
     ColorKmeansTool(cv::Mat& img) noexcept;
     //void getMainColor(unsigned int number, ColorKmeansCallback callback, int convertColor=-1) noexcept;
-    ColorFeats getMainColor(unsigned int number, int convertColor = -1) noexcept;
+    ColorFeats getColorsByKmeans(unsigned int number) noexcept;
+    ColorFeats getColorsByPartition(int threshold) noexcept;
     // c++ 14
     //    template<typename E>
     //    static constexpr auto toType(E enumerator) noexcept {

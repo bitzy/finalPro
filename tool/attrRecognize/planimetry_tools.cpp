@@ -3,6 +3,8 @@
 using namespace cv;
 #define DEBUG
 #define DEBUG_OUTPUT_FILE "../TMP_OUTPUT/"
+#define HAAR_FACE "./configs/haarcascade_frontalface_default.xml"
+#define HAAR_EYES "./configs/haarcascade_eye.xml"
 
 double getEucliDist(double p1x, double p1y, double p2x, double p2y) {
     return sqrt((p1x - p2x) * (p1x - p2x) +
@@ -125,9 +127,41 @@ void outColors2IMG(const Mat &colors, const char *name)
     fpath += name;
     imwrite(name, outImg);
 #endif
+}
 
-//    for(int i = 0; i < colors.rows; i++) {
-//        const Vec3b* ptr = colors.ptr<Vec3b>(i);
-//        std::cout << int(ptr[0][0]) << ";" << int(ptr[0][1]) << ";" << int(ptr[0][2]) << std::endl;
-//    }
+
+
+Mat combineMatSample(const Mat &a, const Mat &b)
+{
+    Mat aps;
+    if(!a.isContinuous()) {
+        aps.create(a.rows, a.cols, a.type());
+        a.copyTo(aps);
+        aps = aps.reshape(0, aps.cols*a.rows);
+    } else aps = a.reshape(0, a.cols*a.rows);
+    Mat bps;
+    if(!b.isContinuous()) {
+        bps.create(b.rows, b.cols, b.type());
+        b.copyTo(bps);
+        bps = bps.reshape(0, b.rows*b.cols);
+    } else bps = b.reshape(0, b.cols*b.rows);
+    Mat res = Mat::zeros(aps.rows+bps.rows, 1, a.type());
+    Mat resROI = res(Rect(0, 0, 1, aps.rows));
+    aps.copyTo(resROI);
+    resROI = res(Rect(0, aps.rows, 1, bps.rows));
+    bps.copyTo(resROI);
+
+    return res;
+}
+
+
+Mat getFaceSkinP(const Mat &img) {
+    Mat gray;
+    cvtColor(img, gray, CV_BGR2GRAY);
+    equalizeHist(gray, gray);
+    CascadeClassifier face, eyes;
+    face.load(HAAR_FACE);
+    eyes.load(HAAR_FACE);
+    std::vector<Rect> faceVec, eyesVec;
+    face.detectMultiScale(gray, faceVec, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30,30));
 }

@@ -45,10 +45,20 @@ double ATTRWAYS::GetSleeveLenth(const ImgData* img)
     cout << "\tget sleeve Lenth from left&right percent value..." << endl;
 #endif
     double sleeveLenth = 0.0;
-    Vec3b clothColor, skinColor;
-    GetClothColor(img, clothColor[0], clothColor[1], clothColor[2]);
+    const int MAIN_COLORS = 5;
+    //Vec3b clothColor, skinColor;
+    int rgb_cloth[MAIN_COLORS][3];
+    double percent_cloth[MAIN_COLORS];
+    GetClothColor(img, rgb_cloth, percent_cloth);
+    for(int i = 0; i < MAIN_COLORS; i++) {
+        cout << "(" << rgb_cloth[i][0] << "," << rgb_cloth[i][1] <<
+                "," << rgb_cloth[i][2] << "):" << percent_cloth[i] << endl;
+    }
 
-    /*GetSkinnColor(img, skinColor[0], skinColor[1], skinColor[2]);
+    int rgb_skin[3];
+    GetSkinnColor(img, rgb_skin);
+
+    /*
     //======== left ======================================================
     vector<Point> lpoints;
     int uppos = posSimple(img->lshoud, img->lelbow, img->lhand, lpoints);
