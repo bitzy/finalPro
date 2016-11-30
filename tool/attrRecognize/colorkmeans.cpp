@@ -68,6 +68,7 @@ ColorKmeansTool::ColorKmeansTool(Mat &_img)noexcept : sampleData(_img) {
     partition_threshhold = 1000;
 }
 
+/*
 ColorFeats ColorKmeansTool::getColorsByPartition(int threshold)
 noexcept {
     partition_threshhold = threshold;
@@ -77,13 +78,13 @@ noexcept {
     Mat sampleDataOP = ColorKmeansTool::getOPData(imgHSV);
 
 
-//    vector<Point3f> samples(sampleDataOP);
-//    vector<int> labels;
-//    partition(samples, labels, equivalence());
+    //    vector<Point3f> samples(sampleDataOP);
+    //    vector<int> labels;
+    //    partition(samples, labels, equivalence());
 
     vector<ColorFeatPer> res;
     return res;
-}
+}*/
 
 /*
 void ColorKmeansTool::getMainColor(unsigned int number, ColorKmeansCallback callback, int convertColor)
@@ -125,7 +126,7 @@ noexcept {
     sort(colorCountVec.begin(), colorCountVec.end(), CmpByValue());
 
     //get sort mat:
-    //    Mat colorSort(number, 1, CV_8UC3);
+    Mat colorSort(number, 1, CV_8UC3);
     //    for(int i = 0; i < number; i++) {
     //        int idx = colorCountVec[i].first;
     //        //cout << colorCountVec[i].second << endl;

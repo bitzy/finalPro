@@ -79,7 +79,7 @@ QString MyImgLabel::getColor(const QPoint &pos) const
     QString res;
     int r = 0, g = 0, b = 0;
     if(imgData->getOKflag()) {//get all data ok!
-        imgData->getPointColor(pos.x(), pos.y(), r, g, b);
+        imgData->getPointColorORI(pos.x(), pos.y(), r, g, b);
     } else {
         qDebug() << "imgData is not loaded!" << endl;
         qDebug() << "set color value (0,0,0)!" << endl;

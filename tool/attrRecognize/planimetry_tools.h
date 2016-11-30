@@ -8,6 +8,7 @@
 double getEucliDist(double p1x, double p1y, double p2x, double p2y);
 double getEucliDist(cv::Point   p1, cv::Point   p2);
 double getEucliDist(cv::Point3d p1, cv::Point3d p2);
+double getEucliDist(cv::Vec3d   p1, cv::Vec3d   p2);
 
 void getDotsOnLine(cv::Point p1, cv::Point p2, std::vector<cv::Point>& dots);
 int  getDotsOnLine(cv::Point p1, cv::Point p2, cv::Point p3, std::vector<cv::Point>& dots);

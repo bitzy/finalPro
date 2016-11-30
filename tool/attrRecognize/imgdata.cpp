@@ -108,10 +108,10 @@ void ImgData::preprocess()
     preprocessFlag = true;
 }
 
-void ImgData::getPointColor(const int x1, const int y1, int &r, int &g, int &b) const
+void ImgData::getPointColorORI(const int x1, const int y1, int &r, int &g, int &b) const
 {
     if(okFlag) {
-        cv::Vec3b color = _getPixelColor(cv::Point(x1, y1));
+        cv::Vec3b color = _getPixelColorORI(cv::Point(x1, y1));
         r = color[2];
         g = color[1];
         b = color[0];
@@ -249,9 +249,15 @@ void ImgData::_resizeSrcToFixedHeight(const cv::Rect &rect, int height)
 #endif
 }
 
-cv::Vec3b ImgData::_getPixelColor(const cv::Point &p) const
+cv::Vec3b ImgData::_getPixelColorORI(const cv::Point &p) const
 {
     cv::Vec3b color = src_ori.at<cv::Vec3b>(p.y, p.x);
+    return color;
+}
+
+cv::Vec3b ImgData::_getPixelColor(const cv::Point &p) const
+{
+    cv::Vec3b color = src.at<cv::Vec3b>(p.y, p.x);
     return color;
 }
 

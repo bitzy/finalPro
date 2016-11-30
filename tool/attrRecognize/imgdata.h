@@ -63,7 +63,7 @@ public:
     //function:
     void preprocess();
     //get image color at point;
-    void getPointColor(const int x1, const int y1,
+    void getPointColorORI(const int x1, const int y1,
                        int&r, int&g, int&b) const;
 
 private:
@@ -72,6 +72,7 @@ private:
     void _resizePosePoints();
     cv::Rect __getBoundingBox();
     void _resizeSrcToFixedHeight(const cv::Rect& rect, int height = 800);
+    cv::Vec3b _getPixelColorORI(const cv::Point& p) const;
     cv::Vec3b _getPixelColor(const cv::Point& p) const;
     bool getxmlDataLoadFlag() const;
     int fminvalue6(int x, int y, int z1=0x7fffffff, int z2=0x7fffffff,

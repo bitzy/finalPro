@@ -20,13 +20,13 @@ void printmat(const Mat& m, int a, int b) {
     printf("\n");
 }
 
-void ATTRWAYS::GetClothColor(const ImgData *img, int rgb[][3], double *percent, int num)
+void ATTRWAYS::GetClothColors(const ImgData *img, int rgb[][3], double *percent, int num)
 {
 #ifdef MYDEBUG
     time_t startT, endT;
     time(&startT);
 #endif
-    assert(num <= 5);
+    //assert(num <= 5);
 
     //color feature extract area1:    
     assert(img->neck.x > img->lshoud.x);

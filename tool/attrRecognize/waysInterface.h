@@ -53,11 +53,11 @@ private:
     //======================== inner ======================
     //attribute's recognize ways;
     int sleeveBaseWay();
-    int textureWay1();
+    int textureBaseWay();
 
     //inner function:
     double GetSleeveLenth(const ImgData* img);
-    void   GetClothColor (const ImgData* img, int rgb[][3], double* percent, int num=5);
+    void   GetClothColors(const ImgData* img, int rgb[][3], double* percent, int num=1);
     void   GetSkinnColor (const ImgData* img, int rgb[3]);
     void   helperGetColorMap();
 };

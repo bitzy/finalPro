@@ -56,17 +56,27 @@ void SuperPixelTool::setImg(const Mat& src) {
         vector<Vec4i> hierarchy;
         findContours(mask, contours, hierarchy, CV_RETR_EXTERNAL,
                      CV_CHAIN_APPROX_SIMPLE, Point(0, 0));
-        if(contours.size() == 1) {
+        int size = contours.size();
+        if(size == 0) {
+            cout << "contours none." << endl;
+            flagok = false;return ;
+        } else if(size == 1) {
             Moments mu;
             mu = moments(contours[0], false);
             Point mc(mu.m10/mu.m00, mu.m01/mu.m00);
             labelCenter[i] = mc;
-            //circle(src2, mc, 1, Scalar(255,0,0));
         } else {
-            cout << "get contours moments error!" << endl;
-            flagok = false;
-            return ;
+            int pos = 0;
+            double area0 = contourArea(contours[0]);
+            for(int j = 1; j < size; j++) {
+                if(contourArea(contours[j]) > area0) pos = j;
+            }
+            Moments mu;
+            mu = moments(contours[pos], false);
+            Point mc(mu.m10/mu.m00, mu.m01/mu.m00);
+            labelCenter[i] = mc;
         }
+        //        circle(src2, labelCenter[i], 1, Scalar(255,0,0));
     }
     //show result:
     //    imwrite("center.jpg", src2);
@@ -88,7 +98,7 @@ int SuperPixelTool::transform(std::vector<Point>& v, int uppos)
         v.clear();
 
         int size = dots.size();
-        v.push_back(getlabelCenter(dots[0]));        
+        v.push_back(getlabelCenter(dots[0]));
         int count = 1;
         for(; count < uppos; count++) {
             Point tmp = getlabelCenter(dots[count]);

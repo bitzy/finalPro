@@ -40,7 +40,7 @@ bool ATTRWAYS::init() {
 
     //texture:
     vector<FUNCITEM> textureWays;
-    FUNCITEM s2("TextureReg", &ATTRWAYS::textureWay1);
+    FUNCITEM s2("TextureReg", &ATTRWAYS::textureBaseWay);
     textureWays.push_back(s2);
     attrWays[3] = textureWays;
 

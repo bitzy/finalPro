@@ -115,10 +115,10 @@ class ColorKmeansTool
             return lhs.second > rhs.second;
         }
     };
-    bool equivalence(const cv::Vec3f& a, const cv::Vec3f& b) {
-        //h:0-180; s:0-255; v: 0-255;
-        return true;
-    }
+    //    bool equivalence(const cv::Vec3f& a, const cv::Vec3f& b) {
+    //        //h:0-180; s:0-255; v: 0-255;
+    //        return true;
+    //    }
 
     static cv::Mat getOPData(cv::Mat& img) noexcept;
     //static std::vector<ColorWithCount> getPixels(cv::Mat& img) noexcept;
@@ -127,7 +127,7 @@ public:
     ColorKmeansTool(cv::Mat& img) noexcept;
     //void getMainColor(unsigned int number, ColorKmeansCallback callback, int convertColor=-1) noexcept;
     ColorFeats getColorsByKmeans(unsigned int number) noexcept;
-    ColorFeats getColorsByPartition(int threshold) noexcept;
+//    ColorFeats getColorsByPartition(int threshold) noexcept;
     // c++ 14
     //    template<typename E>
     //    static constexpr auto toType(E enumerator) noexcept {
