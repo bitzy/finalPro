@@ -63,9 +63,9 @@ private:
 public:
     MyImgLabel();
     //load xml data for this label
-    bool labelLoadDataByXML(const QString& img, const QString& xml);
+    bool labelLoadDataByXML(const QString& img, const QString& xml, bool r);
     void labelLoadDataByData(const QStringList& pose,
-                        const QStringList& attr);
+                        const QStringList& attr, bool refresh = false);
     void labelReset();//just reset the image content; not label index;    
     bool labelSave(); //save imgdata to disk;
     const QString labelTest(int attri, int wayj);

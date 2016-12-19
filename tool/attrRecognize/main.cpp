@@ -1,6 +1,5 @@
 //recognize data structure & ways interface
 #include "imgdata.h"
-#include "tinyxml/helperIMGdataInitial.h"
 #include "waysInterface.h"
 //===== end =============
 
@@ -24,10 +23,7 @@ int main()
 
     printf("\n\nload xml data...");
     ImgData img;
-    img.setIMGpath(imgpath, xmlpath);
-    if(loadxml2imgdata(xmlpath, img)) {
-        printf("==> data load succeed!\n");
-    }
+    img.loadIMGsrc(imgpath, xmlpath);    
 
     printf("\n\ninput your recognize command:\n");
     printf("[r]-recognize command;[b]-exit;[h]-help\n");

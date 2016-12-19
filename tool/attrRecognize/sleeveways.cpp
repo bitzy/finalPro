@@ -1,5 +1,4 @@
 #include "waysInterface.h"
-#include "imgdata.h"    //imgTarget
 #include <iostream>
 using namespace std;
 
@@ -7,8 +6,8 @@ using namespace std;
 #include "superpixeltool.h"   //superpixels
 using namespace cv;//imgData #include <imgproc.hpp>
 
-#define SUPERPIXELSSWITCH
 #undef MYDEBUG
+#define SUPERPIXELSSWITCH
 
 int posSimple(const Point& A, const Point& B, const Point& C, vector<Point>& points)
 {
@@ -127,7 +126,7 @@ double ATTRWAYS::GetSleeveLenth(const ImgData* img)
     //img->src.copyTo(printmat);
     for(unsigned int i = 0; i < lpoints.size(); i++) {
         //circle(printmat, lpoints[i], 1, Scalar(255,0,0), -1);
-        lcolors[i+1] = img->_getPixelColor(lpoints[i]);
+        lcolors[i+1] = img->_getPixelColorFromSrc(lpoints[i]);
         lweight[i+1] = 1;
 #ifdef SUPERPIXELSSWITCH
         if(i < (unsigned int)uppos) {
@@ -143,10 +142,6 @@ double ATTRWAYS::GetSleeveLenth(const ImgData* img)
     for(int i = 0; i < idx; i++) sleeveLenth += lweight[i];
 
     //======== left end! ===================================================
-
-#ifdef MYDEBUG
-    cout << "\tlValue=" << lValue << ";rValue=" << rValue << endl;
-#endif
     return sleeveLenth;
 }
 
@@ -173,7 +168,7 @@ int ATTRWAYS::sleeveBaseWay()
 #ifdef MYDEBUG
     cout << "\n\n*sleeve recognizing..." << endl;
 #endif
-    if(imgTarget->preprocessed() == false) {
+    if(imgTarget->getPreprocessflag() == false) {
 #ifdef MYDEBUG
         cout << "*preprocess..." << endl;
 #endif

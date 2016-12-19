@@ -34,6 +34,7 @@ $(foreach dirname,$(sort $(dir $(sources_c) $(sources_cpp))),\
 #compile & link variable
 CFLAGS 	:= $(if $(DEBUG),-g -O, -O2)
 CFLAGS	+= $(addprefix -I ,$(sort $(dir $(sources_h))))
+CFLAGS  += -std=c++0x
 CXXFLAGS = $(CFLAGS) `pkg-config --cflags opencv`
 LDFLAGS	:=
 LOADLIBS+= `pkg-config --libs opencv`

@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "flagform.h"
+#include "runmanager.h"
 
 #include <QtWidgets>
 
@@ -135,7 +136,7 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
             tmplist << QString::fromStdString(stdlist[ii]);
         comboBox->addItems(tmplist);
         if(tmplist.size() == 0) check->setEnabled(false);
-        table2->setCellWidget(1, i, comboBox);        
+        table2->setCellWidget(1, i, comboBox);
     }
     table2->setMinimumHeight(100);
     table2->setMaximumHeight(100);
@@ -190,7 +191,7 @@ QGroupBox *MainWindow::UIcreateConfigGroup()
     QHBoxLayout *func2SetPath = new QHBoxLayout;
     func2SetPath->addWidget(UIcreateLabel(tr("Bulk Directory:")));
     func2SetPath->addWidget(bulkPathBtn);
-    func2SetPath->addWidget(BulkChoosedPath);    
+    func2SetPath->addWidget(BulkChoosedPath);
     func2SetPath->addStretch(1);
 
     QHBoxLayout *func3SetPath = new QHBoxLayout;
@@ -234,10 +235,11 @@ void MainWindow::initial_system_dataLoad()
 
 void MainWindow::loadAttrTableData(const QString& fpath)
 {
+    attrTableDataFname = fpath;
     QFile file(fpath);
-    bool tmpflag = false;
+    attrTableDataExist = false;
     if(file.exists()) {
-        tmpflag = true;
+        attrTableDataExist = true;
         file.open(QIODevice::ReadOnly);
     }
     int size = GLOBALCONFIG::inst()->attrKind();
@@ -245,7 +247,7 @@ void MainWindow::loadAttrTableData(const QString& fpath)
         int cols = GLOBALCONFIG::inst()->getAttrValuesByIndex(i).size();
         for(int j = 0; j < cols; j++) {
             QString showStr = GLOBALCONFIG::inst()->getAttrValue(i, j);
-            if(tmpflag) {
+            if(attrTableDataExist) {
                 QString line = file.readLine(255).simplified();
                 showStr.append("/");
                 showStr.append(line);
@@ -254,7 +256,7 @@ void MainWindow::loadAttrTableData(const QString& fpath)
             model->setItem(i, j, item);
         }
     }
-    if(tmpflag) file.close();
+    if(attrTableDataExist) file.close();
 }
 
 QLabel *MainWindow::UIcreateLabel(const QString &text)
@@ -271,18 +273,17 @@ QPushButton *MainWindow::UIcreateButton(const QString &text, const char *member)
     return button;
 }
 
-QList<QPoint> MainWindow::getFuncNeedtoRun()
+void MainWindow::getFuncNeedtoRun(QList<int> &attrIdxs, QList<int>& wayIdxs)
 {
-    QList<QPoint> res;
     int cols = table2->columnCount();
     for(int i = 0; i < cols; i++) {
         QCheckBox *check = (QCheckBox*)table2->cellWidget(0, i);
         QComboBox *combo = (QComboBox*)table2->cellWidget(1, i);
-        if(check->isChecked()) {
-            res.push_back(QPoint(i, combo->currentIndex()));
+        if(check->isChecked()) {            
+            attrIdxs.push_back(i);
+            wayIdxs.push_back(combo->currentIndex());
         }
     }
-    return res;
 }
 
 void MainWindow::browseLabelPath()
@@ -356,7 +357,7 @@ void MainWindow::labelBegin()
         return ;
     }
     // pose data by label:
-    FlagForm* flagform = new FlagForm(path, path);//store .xml in the same dir;    
+    FlagForm* flagform = new FlagForm(path, path);//store .xml in the same dir;
     flagform->resize(_windowW/2, _windowH*0.8);
     flagform->setMinimumHeight(680);
     flagform->setMinimumWidth(1200);
@@ -372,22 +373,29 @@ void MainWindow::bulkBegin()
         QMessageBox::information(this, "worning", tr("no .jpg file!"), QMessageBox::Ok);
         return ;
     }
-    QList<QPoint> runFuncList = getFuncNeedtoRun();
-    if(runFuncList.size() == 0) {
+    QList<int> dealAttrIdexs;
+    QList<int> dealWayIndexs;
+    getFuncNeedtoRun(dealAttrIdexs, dealWayIndexs);
+    int size = dealAttrIdexs.size();
+    if(size == 0) {
         QMessageBox::information(this, "worning", tr("no attr choosed!"), QMessageBox::Ok);
         return ;
-    }
-
-    /*
-    openMidRes(false);
-    //store the result in the system test directory;
+    }    
+//    QStringList names;
+//    QList<ATTR_FUNC> addrs;
+//    addrs.reserve(size);
+//    for(int i = 0; i < size; i++) {
+//        names << GLOBALCONFIG::inst()->getAttrNameByIndex(dealAttrIdexs[i]);
+//        addrs[i] = ATTRWAYS::instance()->getFuncAttr(dealAttrIdexs[i], dealWayIndexs[i]);
+//    }
     RunManager * runManager = new RunManager(
-                path, SYSTEST_DIR,
-                runFuncList, dataConfigFileExist,
-                configFile);
+                GLOBALFUNC::pathSlashAdd(path),
+                GLOBALDEFINE::SYSTEST_DIR,
+                dealAttrIdexs, dealWayIndexs,
+                attrTableDataExist,
+                attrTableDataFname);
     runManager->resize(800,600);
     runManager->exec();
-    */
 }
 
 void MainWindow::analyzeBegin()
@@ -397,7 +405,6 @@ void MainWindow::analyzeBegin()
         QMessageBox::information(this, "worning", tr("no file choosed!"), QMessageBox::Ok);
         return ;
     }
-
     /*
     Analyzer* tmpAnalyze = new Analyzer(analyzeFilePath);
     tmpAnalyze->resize(900, 600);
@@ -424,7 +431,7 @@ void MainWindow::sleeveBulkBegin()
     SleeveManager* srun = new SleeveManager(path, SYSTEST_DIR, method);
     srun->resize(500, 120);
     srun->exec();*/
-    qDebug() << "ok!" << endl;
+    qDebug() << method << "ok!" << endl;
 }
 
 

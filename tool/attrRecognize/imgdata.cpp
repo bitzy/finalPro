@@ -4,10 +4,13 @@
 using namespace std;
 #include <opencv2/highgui/highgui.hpp> //imread
 
+#include "tinyxml/tinyxml.h"
+#include "tinyxml/tinystr.h"
+
 //#define IMGDATADEBUG
 #ifdef IMGDATADEBUG
-    #include <opencv2/core/core.hpp>
-    using namespace cv;
+#include <opencv2/core/core.hpp>
+using namespace cv;
 #endif
 
 //=================== POSE NAME =============
@@ -28,99 +31,205 @@ using namespace std;
 //=================== POSE NAME =============
 
 ImgData::ImgData(){
-    okFlag = false;
+    xmlPathsOKFlag = false;
+    poseDataOKFlag = false;
+    attrDataOKFlag = false;
+    loadimgsOKFlag = false;
+    preprocessFlag = false;
+    pointOKFlag = false;
 }
 
-bool ImgData::getOKflag() const
+bool ImgData::getXmlPathsOKflag() const
 {
-    return okFlag;
+    return xmlPathsOKFlag;
 }
 
-bool ImgData::preprocessed() const
+bool ImgData::getPoseDataOKflag() const
+{
+    return poseDataOKFlag;
+}
+
+bool ImgData::getAttrDataOKflag() const
+{
+    return attrDataOKFlag;
+}
+
+bool ImgData::getLoadimgsOKflag() const
+{
+    return loadimgsOKFlag;
+}
+
+bool ImgData::getPreprocessflag() const
 {
     return preprocessFlag;
 }
 
-bool ImgData::getxmlDataLoadFlag() const
+bool ImgData::getPointOKflag() const
 {
-    return xmlDataLoadFlag;
+    return pointOKFlag;
 }
 
-//xmlDataload load through xmlFile.
-void ImgData::setXmlDataLoadFlag(const bool flag)
+void ImgData::loadIMGsrc(const string img)
 {
-    xmlDataLoadFlag = flag;
+    MYIMG = img;
+    src_ori = cv::imread(MYIMG);
+    loadimgsOKFlag = true;
+    //when load a img's:
+    xmlPathsOKFlag = false;
+    poseDataOKFlag = false;
+    attrDataOKFlag = false;
+    preprocessFlag = false;
+    pointOKFlag = false;
+    string tmp = img.substr(0, img.find_last_of("."));
+    tmp += ".xml";
+    setDefaultXMLPath(tmp);
+}
+
+void ImgData::loadIMGsrc(const string img, const string xml)
+{
+    MYIMG = img;
+    src_ori = cv::imread(MYIMG);
+    loadimgsOKFlag = true;
+
+    DBxmlPATH = xml;
+    xmlPathsOKFlag = true;
+    //when load a img's:
+    poseDataOKFlag = false;
+    attrDataOKFlag = false;
+    preprocessFlag = false;
+    pointOKFlag = false;
+    _loadPoseDatafromxml();
 }
 
 const string &ImgData::getMYIMG() const
 {
-    return MYIMG;
+    if(loadimgsOKFlag) return MYIMG;
+    cout << "img not set yet!" << endl;
+    exit(20);
 }
 
-const string &ImgData::getMYXML() const
+void ImgData::setDefaultXMLPath(string str)
 {
-    return MYXML;
+    this->DBxmlPATH = str;
+    xmlPathsOKFlag = true;
+}
+
+const string &ImgData::getXMLPath() const
+{
+    if(xmlPathsOKFlag) return DBxmlPATH;
+    cout << "xml path not set yet!" << endl;
+    exit(20);
 }
 
 const vector<string>& ImgData::getPoseDatas() const
 {
-    return poseDatas;
+    if(poseDataOKFlag) return poseDatas;
+    cout << "pose data not load yet!" << endl;
+    exit(20);
 }
 
 const vector<string>& ImgData::getAttrDatas() const
 {
-    return attrDatas;
+    if(attrDataOKFlag) return attrDatas;
+    cout << "attr data not load yet!" << endl;
+    exit(20);
 }
 
 void ImgData::setPoseDatas(const vector<string> &data)
 {    
     poseDatas.assign(data.begin(), data.end());
+    poseDataOKFlag = true;
 }
 
 void ImgData::setAttrDatas(const vector<string> &data)
 {
     attrDatas.assign(data.begin(), data.end());
-}
-
-void ImgData::setIMGpath(const string img, const string xml)
-{
-    MYIMG = img;
-    MYXML = xml;
-    src_ori = cv::imread(MYIMG);
-
-    okFlag = true;
-    preprocessFlag = false;
-    xmlDataLoadFlag = false;
+    attrDataOKFlag = true;
 }
 
 //do the process step for all images.
 void ImgData::preprocess()
 {
-    if(!okFlag || !getxmlDataLoadFlag()) {
-        cout << "Data Struct not load xml data yet!" << endl;
+    if(!getLoadimgsOKflag() || !getPoseDataOKflag()) {
+        cout << "IMG/POSEDATA not load yet!" << endl;
         cout << "exit with ERROR code 12." << endl;
         exit(12);
     }
 
     //preprocess for all image:
-    _loadManDotstd(); //get man dot point from poseDatas;
+    _loadPoints(); //get man dot point from poseDatas;
     _resizeSrcToFixedHeight(__getBoundingBox()); //fixed hegiht;
     preprocessFlag = true;
 }
 
-void ImgData::getPointColorORI(const int x1, const int y1, int &r, int &g, int &b) const
+void ImgData::getPColorFromIMG(const int x1, const int y1, int &r, int &g, int &b) const
 {
-    if(okFlag) {
-        cv::Vec3b color = _getPixelColorORI(cv::Point(x1, y1));
+    if(getLoadimgsOKflag()) {
+        cv::Vec3b color = _getPixelColorFromSRC_ORI(cv::Point(x1, y1));
         r = color[2];
         g = color[1];
         b = color[0];
     } else r = g = b = 0;
 }
 
+string selectSingleNode(TiXmlElement* root, string nodeName) {
+    string res;
+    if(root == NULL) return res;
+    TiXmlElement* pNode = root->FirstChildElement();
+    for(; pNode; pNode = pNode->NextSiblingElement()) {
+        if(!nodeName.compare(pNode->Value())) {
+            res = pNode->GetText();
+            //cout <<  res << endl;
+        }
+    }
+    return res;
+}
 
-void ImgData::_loadManDotstd()
-{    
+void ImgData::_loadPoseDatafromxml()
+{
+    if(xmlPathsOKFlag) {
+        //loadxml2imgdata(DBxmlPATH, *this);
+        try{
+            vector<string> posedata;
+            vector<string> attrdata;
+            TiXmlDocument *myDocument = new TiXmlDocument(DBxmlPATH.c_str());
+            myDocument->LoadFile();
+            TiXmlElement *rootElement = myDocument->RootElement();
+            //extract posedata&attrdata by tixmltlement
+
+            TiXmlElement* poseDataNode = rootElement->FirstChildElement();
+            int size = STDCONFIG::INST()->getPoseCounter();
+            for(int i = 0; i < size; i++) {
+                string poseName = STDCONFIG::INST()->getPoseNameByIndex(i);
+                string poseNameValue = selectSingleNode(poseDataNode, poseName);
+                if(poseNameValue.empty()) posedata.push_back("null");
+                else posedata.push_back(poseNameValue);
+            }
+
+            TiXmlElement* attrDataNode = poseDataNode->NextSiblingElement();
+            int size1 = STDCONFIG::INST()->getAllKind();
+            for(int i = 0; i < size1; i++) {
+                string attrName = STDCONFIG::INST()->getAttrNameByIndex(i);
+                string attrNameValue = selectSingleNode(attrDataNode, attrName);
+                if(attrNameValue.empty()) attrdata.push_back("null");
+                else attrdata.push_back(attrNameValue);
+            }
+            //set imgdata:
+            setPoseDatas(posedata);
+            setAttrDatas(attrdata);
+        } catch(string& e) {
+            cout << e << endl;
+        }
+    }
+}
+
+
+void ImgData::_loadPoints()
+{
+    if(!getPoseDataOKflag()) {
+        cout << "pose data not load yet!" << endl;
+        exit(20);
+    }
     vector<cv::Point2i> manDotstd;
     int size = (int)poseDatas.size();
     for(int i = 0; i < size; i++) {
@@ -144,16 +253,21 @@ void ImgData::_loadManDotstd()
     rknee = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PRK)];
     lank = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PLA)];
     rank = manDotstd[STDCONFIG::INST()->getPoseIndexByName(PRA)];
+    pointOKFlag = true;
 }
 
 void ImgData::__resizePoint(cv::Point &p) const
-{
+{    
     p.x = (p.x-xoffset)*scale;
     p.y = (p.y-yoffset)*scale;
 }
 
 void ImgData::_resizePosePoints()
 {
+    if(!getPointOKflag()) {
+        cout << "points not load yet!" << endl;
+        exit(20);
+    }
     __resizePoint(head);
     __resizePoint(neck);
     __resizePoint(lshoud);
@@ -172,6 +286,10 @@ void ImgData::_resizePosePoints()
 
 cv::Rect ImgData::__getBoundingBox()
 {
+    if(!getPointOKflag() || !getLoadimgsOKflag()) {
+        cout << "img not set or points not load yet!" << endl;
+        exit(20);
+    }
     int top = fminvalue6(head.y, lelbow.y, relbow.y, lhand.y, rhand.y);
     int left = fminvalue6(lshoud.x, lelbow.x, lhand.x, relbow.x, rhand.x, lhip.x);
     {
@@ -229,9 +347,13 @@ cv::Rect ImgData::__getBoundingBox()
 
 void ImgData::_resizeSrcToFixedHeight(const cv::Rect &rect, int height)
 {
+    if(!getLoadimgsOKflag()) {
+        cout << "img not set yet!" << endl;
+        exit(20);
+    }
 #ifdef IMGDATADEBUG
     cout << "img_ori's size" << src_ori.cols << "x"
-            << src_ori.rows << endl;
+         << src_ori.rows << endl;
 #endif
     xoffset = rect.x;
     yoffset = rect.y;
@@ -243,19 +365,23 @@ void ImgData::_resizeSrcToFixedHeight(const cv::Rect &rect, int height)
     _resizePosePoints();
 #ifdef IMGDATADEBUG
     cout << "src's size" << src.cols << "x"
-            << src.rows << endl;
+         << src.rows << endl;
     line(src, lshoud, lelbow, Scalar(0,255,0));
     imwrite("scaleimg.jpg", src);
 #endif
 }
 
-cv::Vec3b ImgData::_getPixelColorORI(const cv::Point &p) const
+cv::Vec3b ImgData::_getPixelColorFromSRC_ORI(const cv::Point &p) const
 {
+    if(!getLoadimgsOKflag()) {
+        cout << "img not set yet!" << endl;
+        exit(20);
+    }
     cv::Vec3b color = src_ori.at<cv::Vec3b>(p.y, p.x);
     return color;
 }
 
-cv::Vec3b ImgData::_getPixelColor(const cv::Point &p) const
+cv::Vec3b ImgData::_getPixelColorFromSrc(const cv::Point &p) const
 {
     cv::Vec3b color = src.at<cv::Vec3b>(p.y, p.x);
     return color;

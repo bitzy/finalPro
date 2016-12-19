@@ -156,8 +156,13 @@ void FlagForm::UIcreateAll()
     vbox->addWidget(showResult, 1);
 
     //! [21]
+    refreshLabel = new QCheckBox(tr("show line."));
+    refreshLabel->setChecked(false);
     QHBoxLayout *hbox = new QHBoxLayout;
-    hbox->addWidget(UIcreatePoseTable());
+    QVBoxLayout *tmpvbox = new QVBoxLayout;
+    tmpvbox->addWidget(refreshLabel);
+    tmpvbox->addWidget(UIcreatePoseTable());
+    hbox->addLayout(tmpvbox);
     hbox->addLayout(vbox);
     //! [21]
 
@@ -283,7 +288,8 @@ void FlagForm::showImgByIdx(int index)
     //label load data:
     QString imgPath = dealImages[index].absoluteFilePath();
     QString xmlPath = QString("%1%2.xml").arg(storePath).arg(curImgBaseName);
-    if(picBoard->labelLoadDataByXML(imgPath, xmlPath)) {//img has data;
+    bool tmp = refreshLabel->isChecked();
+    if(picBoard->labelLoadDataByXML(imgPath, xmlPath, tmp)) {//img has data;
         imgLabelDataShow();
     } else {//img has no data;
         DoShowImgNULL();
@@ -326,6 +332,7 @@ void FlagForm::imgLabelDataShow()
     }
     //label:
     int x = GLOBALCONFIG::inst()->getIndexByName("Color1");
+    if(x == -1) return;
     UIsetColor(1, picBoard->labelDataGetAttrDatas()[x]);
     UIsetColor(2, picBoard->labelDataGetAttrDatas()[x+1]);
     UIsetColor(3, picBoard->labelDataGetAttrDatas()[x+2]);
@@ -761,10 +768,9 @@ void FlagForm::submitImg()
 
         tmpData1.push_back(tmpStr);
     }
-    //sync data to label imgdata.
-    picBoard->labelLoadDataByData(
-                tmpData,
-                tmpData1);
+    //sync data to label imgdata.    
+    bool check = refreshLabel->isChecked();
+    picBoard->labelLoadDataByData(tmpData,tmpData1, check);
 
     //save data:
     if(picBoard->labelSave()) {

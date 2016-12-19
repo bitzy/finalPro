@@ -7,7 +7,8 @@
 #define MYDEBUG
 #endif
 
-class ImgData;
+//class ImgData;
+#include "imgdata.h"
 
 class ATTRWAYS;
 typedef int(ATTRWAYS::*ATTR_FUNC)();
@@ -16,7 +17,7 @@ public:
     std::string funcname;
     ATTR_FUNC funcaddr;
     FUNCITEM(const char* str, ATTR_FUNC func)
-        :funcname(str), funcaddr(func) {}
+        :funcname(str), funcaddr(func) {}    
 };
 
 /**
@@ -45,14 +46,17 @@ public:
     }
     //======================== outer ======================
     bool RECOGNIZE(ImgData *img, int attri, int wayj);
+    ATTR_FUNC getFuncAttr(int attri, int wayj);
     std::vector<std::string> getWays(std::string name) const;
-    std::string getresult();
+    int getresult();
     std::string getWaysDetail() const;
 
 private:
     //======================== inner ======================
     //attribute's recognize ways;
+    int collarBaseWay();
     int sleeveBaseWay();
+    int uplenBaseWay();
     int textureBaseWay();
 
     //inner function:

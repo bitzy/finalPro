@@ -32,7 +32,7 @@ private:
     QGroupBox *UIcreatePoseGroup();
     QGroupBox *UIcreateAttrGroup();
     QGroupBox *UIcreateConfigGroup();
-    QList<QPoint> getFuncNeedtoRun();
+    void getFuncNeedtoRun(QList<int>& attrIdxs, QList<int>& wayIdxs);
 
     QLabel *LabelChoosedPath;
     QLabel *BulkChoosedPath;
@@ -51,6 +51,8 @@ private:
 
     int _windowH;
     int _windowW;
+    bool attrTableDataExist;
+    QString attrTableDataFname;
 private slots:
     void browseLabelPath();
     void browseBulkPath();

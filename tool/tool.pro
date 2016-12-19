@@ -30,7 +30,17 @@ SOURCES += main.cpp\
     attrRecognize/planimetry_tools.cpp \
     attrRecognize/skinDetect.cpp \
     attrRecognize/clothColor.cpp \
-    attrRecognize/colorkmeans.cpp
+    attrRecognize/colorkmeans.cpp \
+    attrRecognize/collarways.cpp \
+    attrRecognize/uplenWays.cpp \
+    attrRecognize/libsvm/svm.cpp \
+    attrRecognize/svmpredict.cpp \
+    runmanager.cpp \
+    runthread.cpp \
+    attrRecognize/tinyxml/tinystr.cpp \
+    attrRecognize/tinyxml/tinyxml.cpp \
+    attrRecognize/tinyxml/tinyxmlerror.cpp \
+    attrRecognize/tinyxml/tinyxmlparser.cpp
 
 HEADERS  += mainwindow.h \
     GLOBALDEFINE.h \
@@ -44,7 +54,13 @@ HEADERS  += mainwindow.h \
     attrRecognize/imgdata.h \
     attrRecognize/superpixeltool.h \
     attrRecognize/planimetry_tools.h \
-    attrRecognize/colorkmeans.h
+    attrRecognize/colorkmeans.h \
+    attrRecognize/libsvm/svm.h \
+    attrRecognize/svmpredict.h \
+    runmanager.h \
+    runthread.h \
+    attrRecognize/tinyxml/tinystr.h \
+    attrRecognize/tinyxml/tinyxml.h
 
 FORMS    += mainwindow.ui
 

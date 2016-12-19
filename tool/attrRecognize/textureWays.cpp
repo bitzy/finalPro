@@ -1,5 +1,4 @@
 #include "waysInterface.h"
-#include "imgdata.h"
 #include <iostream>
 using namespace std;
 
@@ -7,7 +6,7 @@ using namespace std;
 #include "planimetry_tools.h"
 using namespace cv;
 
-int judgeTexture(const Mat& img) {
+int judgeTexture(const Mat& /*img*/) {
     //recognize texture type:
     //Single;Vertical;Horizontal;Grid;Point;Leopard;Other
     int res = -1;
@@ -21,7 +20,7 @@ int ATTRWAYS::textureBaseWay()
 #ifdef MYDEBUG
     cout << "\n\n*sleeve recognizing..." << endl;
 #endif
-    if(imgTarget->preprocessed() == false) {
+    if(imgTarget->getPreprocessflag() == false) {
 #ifdef MYDEBUG
         cout << "\tpreprocess..." << endl;
 #endif
@@ -57,10 +56,10 @@ int ATTRWAYS::textureBaseWay()
     hight = (imgTarget->rhip.y - imgTarget->rshoud.y)/2-2*offset.y;
     areas[1] = Rect(imgTarget->neck + offset, Size(width, hight)); //area2;
     //bottomright:
-    offset.y += (imgTarget->rhip - imgTarget->rshoud.y)/2;
+    offset.y += (imgTarget->rhip.y - imgTarget->rshoud.y)/2;
     areas[3] = Rect(imgTarget->neck + offset, Size(width, hight)); //area4;
     //center:
-    area[4] = Rect(Point(areas[0].x+areas[0].width/2, areas[0].y+areas[0].height/2),
+    areas[4] = Rect(Point(areas[0].x+areas[0].width/2, areas[0].y+areas[0].height/2),
             Size(width, hight));
 
     vector<int> textureAreas;

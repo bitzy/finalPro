@@ -78,8 +78,8 @@ QString MyImgLabel::getColor(const QPoint &pos) const
 {
     QString res;
     int r = 0, g = 0, b = 0;
-    if(imgData->getOKflag()) {//get all data ok!
-        imgData->getPointColorORI(pos.x(), pos.y(), r, g, b);
+    if(imgData->getPoseDataOKflag()) {//get all data ok!
+        imgData->getPColorFromIMG(pos.x(), pos.y(), r, g, b);
     } else {
         qDebug() << "imgData is not loaded!" << endl;
         qDebug() << "set color value (0,0,0)!" << endl;
@@ -125,7 +125,7 @@ MyImgLabel::MyImgLabel()
  * @param xml
  * @return
  */
-bool MyImgLabel::labelLoadDataByXML(const QString &img, const QString &xml)
+bool MyImgLabel::labelLoadDataByXML(const QString &img, const QString &xml, bool r)
 {
     //load image first;
     image.load(img);
@@ -134,7 +134,7 @@ bool MyImgLabel::labelLoadDataByXML(const QString &img, const QString &xml)
     update();
     this->resize(image.width(), image.height());
 
-    imgData->setIMGpath(img.toStdString(), xml.toStdString());
+    imgData->loadIMGsrc(img.toStdString());
     //load data;
     QFile file(xml);
     QDomDocument doc;
@@ -164,7 +164,7 @@ bool MyImgLabel::labelLoadDataByXML(const QString &img, const QString &xml)
             else tmpData1.push_back(attrNameValue);
         }
         file.close();
-        labelLoadDataByData(tmpData, tmpData1);
+        labelLoadDataByData(tmpData, tmpData1, r);
         return true;
     }
     return false;
@@ -172,17 +172,19 @@ bool MyImgLabel::labelLoadDataByXML(const QString &img, const QString &xml)
 
 void MyImgLabel::labelLoadDataByData(
         const QStringList &pose,
-        const QStringList &attr)
+        const QStringList &attr,
+        bool refresh)
 {
+#ifdef MYDEBUG
     qDebug() << "myimgLabel pase data to imgData:" << endl;
     qDebug() << pose << endl;
     qDebug() << attr << endl;
+#endif
     imgData->setPoseDatas(GLOBALFUNC::inst()->qvec2stdvec(pose));
     imgData->setAttrDatas(GLOBALFUNC::inst()->qvec2stdvec(attr));
-    imgData->setXmlDataLoadFlag(true);
 
     initialDrawingStatus();
-    labelRefreshPoseData();
+    if(refresh) labelRefreshPoseData();
 }
 
 
@@ -233,8 +235,14 @@ const QString MyImgLabel::labelTest(int attri, int wayj)
     bool ret = false;
     //usage: provide attrways test;
     ret = ATTRWAYS::instance()->RECOGNIZE(imgData, attri, wayj);
-
-    if(ret) res = QString("Succeed. \nCost Time: %1 s.").arg(testTime.elapsed()/1000.0);
+    int recogIdx = ATTRWAYS::instance()->getresult();
+    QString recogDetail("Not recognized!");
+    if(recogIdx != -1) {
+        recogDetail = QString("%1:%2").arg(GLOBALCONFIG::inst()->getAttrNameByIndex(attri))
+                .arg(GLOBALCONFIG::inst()->getAttrValuesByIndex(attri)[recogIdx]);
+    }
+    if(ret) res = QString("Succeed. \n%1\nCost Time: %2 s.")
+            .arg(recogDetail).arg(testTime.elapsed()/1000.0);
     else res = QString("Error!");
     return res;
 }
@@ -266,13 +274,13 @@ void MyImgLabel::labelReset()
  */
 bool MyImgLabel::labelSave()
 {
-    if(imgData->getOKflag() == false) {//all data is set;
+    if(imgData->getPoseDataOKflag() == false) {//all data is set;
         qDebug() << "imgdata is null" << endl;
         return false;
     }
 
     QString cmd;
-    QString xmlpath = QString::fromStdString(imgData->getMYXML());
+    QString xmlpath = QString::fromStdString(imgData->getXMLPath());
     if(GLOBALFUNC::inst()->confirmFileExist(xmlpath)) {
         cmd = QString("mv %1 %2.bak").arg(xmlpath).arg(xmlpath);
         system(cmd.toStdString().c_str());

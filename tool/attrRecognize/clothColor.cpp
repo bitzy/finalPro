@@ -29,8 +29,7 @@ void ATTRWAYS::GetClothColors(const ImgData *img, int rgb[][3], double *percent,
     //assert(num <= 5);
 
     //color feature extract area1:    
-    assert(img->neck.x > img->lshoud.x);
-    assert(img->lhip.y > img->lshoud.y);
+    assert(img->neck.x > img->lshoud.x && img->lhip.y > img->lshoud.y);
     Point offset1 = 0.2*Point(img->neck.x-img->lshoud.x, img->lhip.y-img->lshoud.y);
     int width1  = (img->neck.x - img->lshoud.x) - 2*offset1.x;
     int hight1 = (img->lhip.y - img->lshoud.y) - 2*offset1.y;
@@ -39,8 +38,7 @@ void ATTRWAYS::GetClothColors(const ImgData *img, int rgb[][3], double *percent,
     Rect area1 = Rect(img->lshoud + offset1, Size(width1, hight1));
 
     //color feature extract area2:
-    assert(img->rshoud.x > img->neck.x);
-    assert(img->rhip.y > img->rshoud.y);
+    assert(img->rshoud.x > img->neck.x && img->rhip.y > img->rshoud.y);
     Point offset2 = 0.2*Point(img->rshoud.x-img->neck.x, img->rhip.y-img->rshoud.y);
     int width2 = (img->rshoud.x - img->neck.x) - 2*offset2.x;
     int hight2 = (img->rhip.y - img->rshoud.y) - 2*offset2.y;

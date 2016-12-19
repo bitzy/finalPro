@@ -31,19 +31,31 @@ bool ATTRWAYS::init() {
 
     //attrWays initial:
     attrWays.resize(funcAttrType.size());
-    vector<FUNCITEM> sleeveWays;
+    //===============================================
+    //collar:
+    vector<FUNCITEM> collarWays;
+    FUNCITEM c1("baseWay", &ATTRWAYS::collarBaseWay);
+    collarWays.push_back(c1);
 
     //sleeve:
+    vector<FUNCITEM> sleeveWays;
     FUNCITEM s1("baseWay", &ATTRWAYS::sleeveBaseWay);
     sleeveWays.push_back(s1);
-    attrWays[1] = sleeveWays;
+
+    //uplenth:
+    vector<FUNCITEM> uplenWays;
+    FUNCITEM u1("baseWay", &ATTRWAYS::uplenBaseWay);
+    uplenWays.push_back(u1);
 
     //texture:
     vector<FUNCITEM> textureWays;
     FUNCITEM s2("TextureReg", &ATTRWAYS::textureBaseWay);
     textureWays.push_back(s2);
-    attrWays[3] = textureWays;
 
+    attrWays[0] = collarWays;
+    attrWays[1] = sleeveWays;
+    attrWays[2] = uplenWays;
+    attrWays[3] = textureWays;
     return true;
 }
 
@@ -78,30 +90,31 @@ vector<string> ATTRWAYS::getWays(string name) const
  * @return
  */
 bool ATTRWAYS::RECOGNIZE(ImgData *img, int attri, int wayj)
-{    
+{
     if(_between(attri, 0, attrWays.size())) {
         if(_between(wayj, 0, attrWays[attri].size())) {
             imgTarget = img;
-            attrIdx = attri;
-            waysIdx = wayj;
-            result = -1;
-            ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
-            result = (this->*func)();
-            return true;
+            if(imgTarget->loadimgsOKFlag && imgTarget->poseDataOKFlag) {
+                attrIdx = attri;
+                waysIdx = wayj;
+                result = -1;
+                ATTR_FUNC func = attrWays[attri][wayj].funcaddr;
+                result = (this->*func)();
+                return true;
+            } else return false;
         } else cout <<"wayIdx is error!" << endl;
     } else cout << "attrIdx is error!" << endl;
     return false;
 }
 
-string ATTRWAYS::getresult()
+ATTR_FUNC ATTRWAYS::getFuncAttr(int attri, int wayj)
 {
-    string res = "[\tnot any answer!\t]\n\n";
-    if (result != -1) {
-        stringstream ss;
-        ss << "[\t" << result << "\t]\n\n";
-        res = ss.str();
-    }
-    return res;
+    return attrWays[attri][wayj].funcaddr;
+}
+
+int ATTRWAYS::getresult()
+{    
+    return result;
 }
 
 string ATTRWAYS::getWaysDetail() const

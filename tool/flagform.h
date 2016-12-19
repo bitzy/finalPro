@@ -12,6 +12,7 @@ class QTableWidget;
 class QTextEdit;
 class QLineEdit;
 class MyImgLabel;
+class QCheckBox;
 QT_END_NAMESPACE
 
 class FlagForm : public QDialog
@@ -57,6 +58,7 @@ private:
     QLabel* color1Label;
     QLabel* color2Label;
     QLabel* color3Label;
+    QCheckBox* refreshLabel;
 
     QFileInfoList  dealImages;
     QString storePath;
