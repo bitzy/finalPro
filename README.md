@@ -1,4 +1,7 @@
-# finalPro
+finalPro
+=================
+A GUI tool for picture mark.
+
 # project directory
 	-tool code
 	-testImage imageDir
